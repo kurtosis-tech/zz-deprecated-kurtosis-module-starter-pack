@@ -1,1 +1,2 @@
-# kurtosis-lambda-starter-pack
+Kurtosis Lambda Starter Pack
+============================
