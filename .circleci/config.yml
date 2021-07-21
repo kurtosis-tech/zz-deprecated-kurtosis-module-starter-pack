@@ -1,44 +1,11 @@
 version: 2.1
 
-orbs:
-  aws-s3: circleci/aws-s3@2.0.0
-
-executors:
-  ubuntu_vm:
-    machine:
-      image: ubuntu-1604:202007-01
-      # DO NOT USE THIS YET! This costs 200 credits *per job run* so is extremely expensive for the free plan, but we can turn it on one day if we get more credits
-      # docker_layer_caching: true
-
 # NOTE: Because CircleCI jobs run on separate machines from each other, we duplicate steps (like checkout) between jobs. This is because doing the "correct" DRY
 #  refactoring of, "one job for checkout, one job for build Docker image, etc." would require a) persisting files between jobs and b) persisting Docker images between
 #  jobs. Both are annoying (saving/loading workspaces require re-downloading the workspace over the network, and there doesn't seem to be a good way to do Docker
 #  images), so we run everything inside a single job.
 # See also: https://discuss.circleci.com/t/can-docker-images-be-preserved-between-jobs-in-a-workflow-without-a-manual-load-save/23388/12
 jobs:
-  check_code:
-    executor: ubuntu_vm
-    steps:
-      - checkout
-
-      # If the only changes are to the docs, don't run the slow (and expensive) code checks
-      # `git diff --exit-code` returns 0 exit code if no changes, and 1 if changes
-      - run: |
-          if git --no-pager diff --exit-code origin/develop...HEAD -- . ':!docs'; then
-            circleci-agent step halt
-          fi
-      # Docker is restricting anonymous image pulls, so we log in before we do any pulling
-      - run: "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-
-      - run: |
-          scripts/build_and_run.sh all --client-id "${KURTOSIS_INTERNAL_CLIENT_ID}" --client-secret "${KURTOSIS_INTERNAL_CLIENT_SECRET}" 2>&1 | tee build-output.txt
-      # Grep exits with 0 if one or more lines match, and 1 if not so we invert this to fail the build if the word 'ERROR' is detected
-      # This helps us catch errors that might show up in the testsuite logs but not get propagated to the actual exit codes
-      - run: "! grep 'ERRO' build-output.txt"
-
-      # Checking for running Docker containers after Kurtosis completes testsuite execution
-      - run: |
-          [ -z "$(docker container ls | grep -v 'CONTAINER ID')" ]
   check_docs:
     docker:
       # Needed for `npm install` down below
@@ -59,33 +26,27 @@ jobs:
           command: |
             sudo npm install -g markdown-link-check
             bash .circleci/check-markdown-links.sh
-  push_artifacts:
-    environment:
-      LAMBDA_STARTER_PACK_IMAGE_REPO: "kurtosistech/kurtosis-lambda_starter_pack"
-    executor: ubuntu_vm
+
+  check_golang:
+    docker:
+      - image: cimg/go:1.15.13
     steps:
       - checkout
-      # Docker is restricting anonymous image pulls, so we log in before we do any pulling
-      - run: "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-      - run: scripts/build_and_run.sh build
 
-      # AFAICT, CircleCI doesn't have a nice way to define a derived variable that then gets passed to all later steps, so
-      #  we have to do this
+      # If the only changes are to the docs, don't run the slow (and expensive) code checks
+      # `git diff --exit-code` returns 0 exit code if no changes, and 1 if changes
       - run: |
-          echo "export X_Y_VERSION=\"$(echo '<<pipeline.git.tag>>' | egrep -o '^[0-9]+\.[0-9]+')\"" >> $BASH_ENV
-      # Docker images with this tag will have gotten built by build_and_run
-      - run: |
-          echo "X.Y version: ${X_Y_VERSION}"
-          docker push ${LAMBDA_STARTER_PACK_IMAGE_REPO}:${X_Y_VERSION}
+          if git --no-pager diff --exit-code origin/develop...HEAD -- . ':!docs'; then
+            circleci-agent step halt
+          fi
+
+      - run: golang/scripts/build.sh
 
 workflows:
   build:
     jobs:
       # -- PR check jobs ------------------------------------------
-      - check_code:
-          context:
-            - docker-user
-            - kurtosis-user
+      - check_golang:
           filters:
             branches:
               ignore:
@@ -100,13 +61,5 @@ workflows:
       # -- End PR check jobs ---------------------------------------
 
       # -- Artifact-publishing jobs --------------------------------
-      - push_artifacts:
-          context:
-            - docker-user
-            - kurtosis-user
-          filters:
-            branches:
-              ignore: /.*/
-            tags: 
-              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+      # TODO Implement when we have a language that needs artifact-publishing
       # -- End artifact-publishing jobs ----------------------------
