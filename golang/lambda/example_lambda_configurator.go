@@ -12,6 +12,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const(
+	defaultLogLevel = "info"
+)
+
 type ExampleLambdaConfigurator struct{}
 
 func NewExampleLambdaConfigurator() *ExampleLambdaConfigurator {
@@ -25,23 +29,25 @@ func (t ExampleLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomPa
 		return nil, stacktrace.Propagate(err, "An error occurred deserializing the Lambda serialized custom params with value '%v", serializedCustomParamsStr)
 	}
 
-	//TODO VALIDATE ARGUMENTS log level can't be an empty string
-
-	lambda := NewExampleLambda()
-
 	err := setLogLevel(args.LogLevel)
 	if err != nil {
 		return nil, stacktrace.Propagate(err, "An error occurred setting the log level")
 	}
 
+	lambda := NewExampleLambda()
+
 	return lambda, nil
 }
 
 func setLogLevel(logLevelStr string) error {
+	if logLevelStr == "" {
+		logLevelStr = defaultLogLevel
+	}
 	level, err := logrus.ParseLevel(logLevelStr)
 	if err != nil {
 		return stacktrace.Propagate(err, "An error occurred parsing loglevel string '%v'", logLevelStr)
 	}
+
 	logrus.SetLevel(level)
 	logrus.SetFormatter(&logrus.TextFormatter{
 		ForceColors:   true,
