@@ -3,7 +3,7 @@
  * All Rights Reserved.
  */
 
-package lambda
+package impl
 
 type ExampleLambdaArgs struct {
 	// Indicates the log level for this Lambda implementation

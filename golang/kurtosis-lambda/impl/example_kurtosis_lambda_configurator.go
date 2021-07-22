@@ -3,7 +3,7 @@
  * All Rights Reserved.
  */
 
-package lambda
+package impl
 
 import (
 	"encoding/json"
@@ -16,13 +16,13 @@ const(
 	defaultLogLevel = "info"
 )
 
-type ExampleLambdaConfigurator struct{}
+type ExampleKurtosisLambdaConfigurator struct{}
 
-func NewExampleLambdaConfigurator() *ExampleLambdaConfigurator {
-	return &ExampleLambdaConfigurator{}
+func NewExampleKurtosisLambdaConfigurator() *ExampleKurtosisLambdaConfigurator {
+	return &ExampleKurtosisLambdaConfigurator{}
 }
 
-func (t ExampleLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomParamsStr string) (lambda.Lambda, error) {
+func (t ExampleKurtosisLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomParamsStr string) (lambda.Lambda, error) {
 	serializedCustomParamsBytes := []byte(serializedCustomParamsStr)
 	var args ExampleLambdaArgs
 	if err := json.Unmarshal(serializedCustomParamsBytes, &args); err != nil {
@@ -34,7 +34,7 @@ func (t ExampleLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomPa
 		return nil, stacktrace.Propagate(err, "An error occurred setting the log level")
 	}
 
-	lambda := NewExampleLambda()
+	lambda := NewExampleKurtosisLambda()
 
 	return lambda, nil
 }
