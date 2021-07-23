@@ -19,7 +19,7 @@ COPY .. .
 RUN go test ./...
 
 # Build the application
-RUN GOOS=linux go build -o lambda.bin main.go
+RUN GOOS=linux go build -o lambda.bin ./kurtosis-lambda/main.go
 
 # ============= Execution Stage ================
 FROM alpine:3.12 AS execution
