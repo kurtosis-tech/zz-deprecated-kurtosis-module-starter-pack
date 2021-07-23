@@ -5,7 +5,7 @@
 
 package impl
 
-type ExampleLambdaArgs struct {
-	// Indicates the log level for this Lambda implementation
+type ExampleKurtosisLambdaArgs struct {
+	// Indicates the log level for this Kurtosis Lambda implementation
 	LogLevel string `json:"logLevel"`
 }

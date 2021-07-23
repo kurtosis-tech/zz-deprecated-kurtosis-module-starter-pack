@@ -24,9 +24,9 @@ func NewExampleKurtosisLambdaConfigurator() *ExampleKurtosisLambdaConfigurator {
 
 func (t ExampleKurtosisLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomParamsStr string) (lambda.Lambda, error) {
 	serializedCustomParamsBytes := []byte(serializedCustomParamsStr)
-	var args ExampleLambdaArgs
+	var args ExampleKurtosisLambdaArgs
 	if err := json.Unmarshal(serializedCustomParamsBytes, &args); err != nil {
-		return nil, stacktrace.Propagate(err, "An error occurred deserializing the Lambda serialized custom params with value '%v", serializedCustomParamsStr)
+		return nil, stacktrace.Propagate(err, "An error occurred deserializing the Kurtosis Lambda serialized custom params with value '%v", serializedCustomParamsStr)
 	}
 
 	err := setLogLevel(args.LogLevel)
