@@ -25,7 +25,7 @@ func main() {
 	// >>>>>>>>>>>>>>>>>>> REPLACE WITH YOUR OWN CONFIGURATOR <<<<<<<<<<<<<<<<<<<<<<<<
 
 
-	lambdaExecutor := execution.NewLambdaExecutor(configurator)
+	lambdaExecutor := execution.NewKurtosisLambdaExecutor(configurator)
 	if err := lambdaExecutor.Run(); err != nil {
 		logrus.Errorf("An error occurred running the kurtosis-lambda executor:")
 		fmt.Fprintln(logrus.StandardLogger().Out, err)

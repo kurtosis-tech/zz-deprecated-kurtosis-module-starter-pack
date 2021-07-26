@@ -7,7 +7,7 @@ package impl
 
 import (
 	"encoding/json"
-	"github.com/kurtosis-tech/kurtosis-lambda-api-lib/golang/lib/lambda"
+	kurtosis_lambda "github.com/kurtosis-tech/kurtosis-lambda-api-lib/golang/lib/kurtosis-lambda"
 	"github.com/palantir/stacktrace"
 	"github.com/sirupsen/logrus"
 )
@@ -22,7 +22,7 @@ func NewExampleKurtosisLambdaConfigurator() *ExampleKurtosisLambdaConfigurator {
 	return &ExampleKurtosisLambdaConfigurator{}
 }
 
-func (t ExampleKurtosisLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomParamsStr string) (lambda.Lambda, error) {
+func (t ExampleKurtosisLambdaConfigurator) ParseParamsAndCreateKurtosisLambda(serializedCustomParamsStr string) (kurtosis_lambda.KurtosisLambda, error) {
 	serializedCustomParamsBytes := []byte(serializedCustomParamsStr)
 	var args ExampleKurtosisLambdaArgs
 	if err := json.Unmarshal(serializedCustomParamsBytes, &args); err != nil {

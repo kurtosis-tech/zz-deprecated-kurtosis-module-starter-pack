@@ -17,4 +17,4 @@ IMAGE_NAME="kurtosis-lambda-starter-pack"
 # ==================================================================================================
 #                                             Main Logic
 # ==================================================================================================
-docker build -t "${KURTOSIS_DOCKERHUB_ORG}/${IMAGE_NAME}" --progress=plain -f "${root_dirpath}/Dockerfile" "${root_dirpath}"
+docker build -t "${KURTOSIS_DOCKERHUB_ORG}/${IMAGE_NAME}" --progress=plain -f "${root_dirpath}/kurtosis-lambda/Dockerfile" "${root_dirpath}"
