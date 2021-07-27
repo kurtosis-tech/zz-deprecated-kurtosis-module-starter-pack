@@ -12,9 +12,39 @@ root_dirpath="$(dirname "${script_dirpath}")"
 # ==================================================================================================
 KURTOSIS_DOCKERHUB_ORG="kurtosistech"
 IMAGE_NAME="kurtosis-lambda-starter-pack"
+KURTOSIS_LAMBDA_FOLDER="kurtosis-lambda"
 
 
-# ==================================================================================================
-#                                             Main Logic
-# ==================================================================================================
-docker build -t "${KURTOSIS_DOCKERHUB_ORG}/${IMAGE_NAME}" --progress=plain -f "${root_dirpath}/kurtosis-lambda/Dockerfile" "${root_dirpath}"
+# =============================================================================
+#                           Arg Parsing & Validation
+# =============================================================================
+lambda_image="${1:-}"
+
+# Sets a default value that will be used for Kurtosis in local development and integration tests
+if [ "${lambda_image}" == "" ]; then
+  lambda_image="${KURTOSIS_DOCKERHUB_ORG}/${IMAGE_NAME}"
+fi
+
+# Build Dockerfile
+# Captures the first of tag > branch > commit
+git_ref="$(cd "${root_dirpath}" && git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD)"
+if [ "${git_ref}" == "" ]; then
+  echo "Error: Could not determine a Git ref to use for the Docker tag; is the repo a Git directory?" >&2
+  exit 1
+fi
+
+
+if ! [ -f "${root_dirpath}"/.dockerignore ]; then
+  echo "Error: No .dockerignore file found in root of repo '${root_dirpath}'; this is required so Docker caching is enabled and your Kurtosis Lambda builds remain quick" >&2
+  exit 1
+fi
+
+dockerfile_filepath="${root_dirpath}/${KURTOSIS_LAMBDA_FOLDER}/Dockerfile"
+echo "Building Kurtosis Lambda into a Docker image named '${lambda_image}'..."
+# The BUILD_TIMESTAMP variable is provided because Docker sometimes caches steps it shouldn't and we need a constantly-changing ARG so that we can intentionally bust the cache
+# See: https://stackoverflow.com/questions/31782220/how-can-i-prevent-a-dockerfile-instruction-from-being-cached
+if ! docker build --build-arg BUILD_TIMESTAMP="$(date +"%FT%H:%M:%S")" -t "${lambda_image}" -f "${dockerfile_filepath}" "${root_dirpath}"; then
+  echo "Error: Docker build of the Kurtosis Lambda failed" >&2
+  exit 1
+fi
+echo "Successfully built Docker image '${lambda_image}' containing the Kurtosis Lambda"

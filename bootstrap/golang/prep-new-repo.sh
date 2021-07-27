@@ -4,6 +4,7 @@ set -euo pipefail
 #                                    Constants
 # =============================================================================
 LAMBDA_IMPL_DIRNAME="kurtosis-lambda"
+SCRIPTS_DIRNAME="scripts"
 
 # Constants 
 GO_MOD_FILENAME="go.mod"
@@ -44,6 +45,7 @@ cp "${input_dirpath}/.dockerignore" "${output_dirpath}/"
 cp "${input_dirpath}/${GO_MOD_FILENAME}" "${output_dirpath}/"
 cp "${input_dirpath}/go.sum" "${output_dirpath}/"
 cp -r "${input_dirpath}/${LAMBDA_IMPL_DIRNAME}" "${output_dirpath}/"
+cp -r "${input_dirpath}/${SCRIPTS_DIRNAME}" "${output_dirpath}/"
 
 
 # =============================================================================

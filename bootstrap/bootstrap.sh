@@ -14,12 +14,17 @@ ALLOWED_IMAGE_NAME_CHARS='a-z0-9._/-'
 
 SUPPORTED_LANGS_FILENAME="supported-languages.txt"
 
+# Build script
+BUILD_FILENAME="build.sh"
+
 # Script for prepping a new Kurtosis Lambda repo
 PREP_NEW_REPO_FILENAME="prep-new-repo.sh"
 
 # Output repo constants
 OUTPUT_README_FILENAME="README.md"
 KURTOSIS_LAMBDA_FOLDER="kurtosis-lambda"
+
+SCRIPTS_DIRNAME="scripts"
 
 # =============================================================================
 #                             Pre-Arg Parsing
@@ -46,7 +51,7 @@ done <"${supported_langs_filepath}"
 
 show_help_and_exit() {
   echo ""
-  echo "Usage: $(basename "${0}") lang new_repo_dirpath lambda_image_name"
+  echo "Usage: $(basename "${0}") lang new_repo_dirpath kurtosis_lambda_image_name"
   echo ""
   # NOTE: We *could* extract the arg names to variables since they're repeated, but then we wouldn't be able to visually align the indentation here
   echo "  lang                        Language that you want to write your Kurtosis Lambda in (choices: $(paste -sd '|' "${supported_langs_filepath}"))."
@@ -82,15 +87,16 @@ if [ -z "${output_dirpath}" ]; then
 fi
 if [ -d "${output_dirpath}" ] && [ "$(ls -A "${output_dirpath}")" ]; then
   echo "Error: Output directory '${output_dirpath}' exists, but is not empty"
-  exit 1
+  show_help_and_exit
 fi
 if [ -z "${lambda_image}" ]; then
   echo "Error: Kurtosis Lambda image cannot be empty" >&2
-  exit 1
+  show_help_and_exit
 fi
 sanitized_image="$(echo "${lambda_image}" | sed "s|[^${ALLOWED_IMAGE_NAME_CHARS}]||g")"
 if [ "${sanitized_image}" != "${lambda_image}" ]; then
   echo "Error: Kurtosis Lambda image name '${lambda_image}' doesn't match regex [${ALLOWED_IMAGE_NAME_CHARS}]+" >&2
+  show_help_and_exit
 fi
 
 # =============================================================================
@@ -115,6 +121,15 @@ cat <<EOF >"${output_readme_filepath}"
 My Kurtosis Lambda
 =====================
 Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
+
+1. Customize your own Kurtosis Lambda redefining the generated files inside the `impl` folder
+    1. Rename the files and objects, if you want, using a name that describes the implementation of your Kurtosis Lambda
+    1. Implement the functionality of your Kurtosis Lambda inside the execute method
+       1. Define what parameters it will receive and what parameters it will return
+       1. A good practice is to validate and sanitize the received parameters
+    1. Write the Kurtosis Lambda Configurator for your own Kurtosis Lambda, define inside this which parameters will be used to create and configure the Kurtosis Lambda
+    1. Refactor the main method inside the main file so that it now uses your own custom Kurtosis Configurator
+    1. Run `scripts/build.sh`, when you finish your Kurtosis Lambda, to update the Docker image
 EOF
 if [ "${?}" -ne 0 ]; then
   echo "Error: Could not write README file to '${output_readme_filepath}'" >&2
@@ -143,32 +158,6 @@ if ! git commit -m "Initial commit" > /dev/null; then
     exit 1
 fi
 
-# Build Dockerfile
-# Captures the first of tag > branch > commit
-repo_dirpath="${output_dirpath}"
-git_ref="$(cd "${repo_dirpath}" && git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD)"
-if [ "${git_ref}" == "" ]; then
-  echo "Error: Could not determine a Git ref to use for the Docker tag; is the repo a Git directory?" >&2
-  exit 1
-fi
-
-docker_tag="$(echo "${git_ref}" | sed 's,[/:],_,g')"
-if [ "${docker_tag}" == "" ]; then
-  echo "Error: Sanitizing Git ref to get a Docker tag for the Kurtosis Lambda yielded an empty string" >&2
-  exit 1
-fi
-
-if ! [ -f "${repo_dirpath}"/.dockerignore ]; then
-  echo "Error: No .dockerignore file found in root of repo '${repo_dirpath}'; this is required so Docker caching is enabled and your Kurtosis Lambda builds remain quick" >&2
-  exit 1
-fi
-
-dockerfile_filepath="${output_dirpath}/${KURTOSIS_LAMBDA_FOLDER}/Dockerfile"
-echo "Building Kurtosis Lambda into a Docker image named '${lambda_image}'..."
-# The BUILD_TIMESTAMP variable is provided because Docker sometimes caches steps it shouldn't and we need a constantly-changing ARG so that we can intentionally bust the cache
-# See: https://stackoverflow.com/questions/31782220/how-can-i-prevent-a-dockerfile-instruction-from-being-cached
-if ! docker build --build-arg BUILD_TIMESTAMP="$(date +"%FT%H:%M:%S")" -t "${lambda_image}:${docker_tag}" -f "${dockerfile_filepath}" "${repo_dirpath}"; then
-  echo "Error: Docker build of the Kurtosis Lambda failed" >&2
-  exit 1
-fi
-echo "Successfully built Docker image '${lambda_image}' containing the Kurtosis Lambda"
+#Runs build script
+scripts_dirpath="${output_dirpath}/${SCRIPTS_DIRNAME}"
+bash "${scripts_dirpath}/${BUILD_FILENAME}" "${lambda_image}"

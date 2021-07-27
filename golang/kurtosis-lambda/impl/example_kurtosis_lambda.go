@@ -51,7 +51,7 @@ func (e ExampleKurtosisLambda) Execute(networkCtx *networks.NetworkContext, seri
 
 	result, err := json.Marshal(exampleKurtosisLambdaResult)
 	if err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v\n'", exampleKurtosisLambdaResult)
+		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
 	}
 	stringResult := string(result)
 
