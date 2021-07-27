@@ -110,7 +110,7 @@ fi
 lang_dirpath="${repo_root_dirpath}/${lang}"
 lang_bootstrap_dirpath="${script_dirpath}/${lang}"
 prep_new_repo_script_filepath="${lang_bootstrap_dirpath}/${PREP_NEW_REPO_FILENAME}"
-if ! bash "${prep_new_repo_script_filepath}" "${lang_dirpath}" "${output_dirpath}"; then
+if ! bash "${prep_new_repo_script_filepath}" "${lang_dirpath}" "${output_dirpath}" "${lambda_image}"; then
   echo "Error: Failed to prep new repo using script '${prep_new_repo_script_filepath}'" >&2
   exit 1
 fi
@@ -122,13 +122,9 @@ My Kurtosis Lambda
 =====================
 Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
 
-1. Customize your own Kurtosis Lambda editing the generated files inside the `/path/to/your/code/repos/kurtosis-lambda/impl` folder
-    1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis Lambda
-    1. Write the functionality of your Kurtosis Lambda inside the `execute` method
-       1. Define what parameters it will receive and what parameters it will return. Is always a good practice to validate and sanitize the received parameters
-    1. Write the Kurtosis Lambda Configurator for your own Kurtosis Lambda, define which parameters will be used to create and configure the Kurtosis Lambda
-    1. Edit the main file and replace the existing code in order to use your own custom Kurtosis Configurator
-    1. Run `path/to/your/code/repos/scripts/build.sh`, when you finish your Kurtosis Lambda, to update the Docker image
+1. Customize your own Kurtosis Lambda by editing the generated files inside the `/path/to/your/code/repos/kurtosis-lambda/impl` folder
+  1. Follow the bootstrap instructions
+
 EOF
 if [ "${?}" -ne 0 ]; then
   echo "Error: Could not write README file to '${output_readme_filepath}'" >&2
@@ -159,4 +155,7 @@ fi
 
 #Runs build script
 scripts_dirpath="${output_dirpath}/${SCRIPTS_DIRNAME}"
-bash "${scripts_dirpath}/${BUILD_FILENAME}" "${lambda_image}"
+bash "${scripts_dirpath}/${BUILD_FILENAME}"
+
+echo "Bootstrap successful!"
+echo "For next steps, follow the instructions in the README at /path/to/new/README"
