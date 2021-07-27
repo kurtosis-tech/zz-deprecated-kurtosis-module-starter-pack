@@ -10,21 +10,46 @@ root_dirpath="$(dirname "${script_dirpath}")"
 # ==================================================================================================
 #                                             Constants
 # ==================================================================================================
-KURTOSIS_DOCKERHUB_ORG="kurtosistech"
-IMAGE_NAME="kurtosis-lambda-starter-pack"
+# A sed regex that will be used to determine if the user-supplied image name matches the regex
+ALLOWED_IMAGE_NAME_CHARS='a-z0-9._/-'
+
 KURTOSIS_LAMBDA_FOLDER="kurtosis-lambda"
 
+
+# =============================================================================
+#                             Pre-Arg Parsing
+# =============================================================================
+show_help_and_exit() {
+  echo ""
+  echo "Usage: $(basename "${0}") kurtosis_lambda_image_name"
+  echo ""
+  # NOTE: We *could* extract the arg names to variables since they're repeated, but then we wouldn't be able to visually align the indentation here
+  echo "  kurtosis_lambda_image_name  Every Kurtosis Lambda runs inside a Docker image, so building your Kurtosis Lambda means producing a Docker image containing"
+  echo "                              your Kurtosis Lambda code. This is the name of the Docker image that building your Kurtosis Lambda repo will produce."
+  echo "                              This image should not exist yet, as building the Kurtosis Lambda will create it. "
+  echo "                              The image name must match the regex [${ALLOWED_IMAGE_NAME_CHARS}]+ (e.g. 'my-kurtosis-lambda-image')."
+  echo ""
+  exit 1 # Exit with an error so CI fails if this was accidentally called
+}
 
 # =============================================================================
 #                           Arg Parsing & Validation
 # =============================================================================
 lambda_image="${1:-}"
 
-# Sets a default value that will be used for Kurtosis in local development and integration tests
-if [ "${lambda_image}" == "" ]; then
-  lambda_image="${KURTOSIS_DOCKERHUB_ORG}/${IMAGE_NAME}"
+if [ -z "${lambda_image}" ]; then
+  echo "Error: Kurtosis Lambda image cannot be empty" >&2
+  show_help_and_exit
+fi
+sanitized_image="$(echo "${lambda_image}" | sed "s|[^${ALLOWED_IMAGE_NAME_CHARS}]||g")"
+if [ "${sanitized_image}" != "${lambda_image}" ]; then
+  echo "Error: Kurtosis Lambda image name '${lambda_image}' doesn't match regex [${ALLOWED_IMAGE_NAME_CHARS}]+" >&2
+  show_help_and_exit
 fi
 
+# =============================================================================
+#                                 Main Code
+# =============================================================================
 # Build Dockerfile
 # Captures the first of tag > branch > commit
 git_ref="$(cd "${root_dirpath}" && git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD)"

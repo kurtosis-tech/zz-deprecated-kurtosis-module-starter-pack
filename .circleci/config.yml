@@ -44,7 +44,7 @@ jobs:
             circleci-agent step halt
           fi
 
-      - run: golang/scripts/build.sh
+      - run: golang/scripts/build.sh kurtosistech/kurtosis-lambda-starter-pack
 
 workflows:
   build:

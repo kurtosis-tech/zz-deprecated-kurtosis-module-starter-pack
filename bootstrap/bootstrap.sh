@@ -122,14 +122,13 @@ My Kurtosis Lambda
 =====================
 Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
 
-1. Customize your own Kurtosis Lambda redefining the generated files inside the `impl` folder
-    1. Rename the files and objects, if you want, using a name that describes the implementation of your Kurtosis Lambda
-    1. Implement the functionality of your Kurtosis Lambda inside the execute method
-       1. Define what parameters it will receive and what parameters it will return
-       1. A good practice is to validate and sanitize the received parameters
-    1. Write the Kurtosis Lambda Configurator for your own Kurtosis Lambda, define inside this which parameters will be used to create and configure the Kurtosis Lambda
-    1. Refactor the main method inside the main file so that it now uses your own custom Kurtosis Configurator
-    1. Run `scripts/build.sh`, when you finish your Kurtosis Lambda, to update the Docker image
+1. Customize your own Kurtosis Lambda editing the generated files inside the `/path/to/your/code/repos/kurtosis-lambda/impl` folder
+    1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis Lambda
+    1. Write the functionality of your Kurtosis Lambda inside the `execute` method
+       1. Define what parameters it will receive and what parameters it will return. Is always a good practice to validate and sanitize the received parameters
+    1. Write the Kurtosis Lambda Configurator for your own Kurtosis Lambda, define which parameters will be used to create and configure the Kurtosis Lambda
+    1. Edit the main file and replace the existing code in order to use your own custom Kurtosis Configurator
+    1. Run `path/to/your/code/repos/scripts/build.sh`, when you finish your Kurtosis Lambda, to update the Docker image
 EOF
 if [ "${?}" -ne 0 ]; then
   echo "Error: Could not write README file to '${output_readme_filepath}'" >&2
