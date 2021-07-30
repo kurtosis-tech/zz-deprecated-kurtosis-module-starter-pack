@@ -46,6 +46,18 @@ jobs:
 
       - run: golang/scripts/build.sh
 
+  push_docker_image:
+    executor: ubuntu_vm
+    steps:
+      - checkout
+      - run: bash .circleci/build-and-push-example-images.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}" "<<pipeline.git.tag>>"
+
+  validate_bootstraps:
+    executor: ubuntu_vm
+    steps:
+      - checkout
+      - run: bash .circleci/validate-all-bootstraps.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
+
 workflows:
   build:
     jobs:
@@ -62,6 +74,29 @@ workflows:
               ignore:
                 - develop
                 - master
+      # ============== Jobs that run upon release ===============================
+      # Bootstrap validation needs to happen upon release because bootstrapping
+      # pulls down the latest version of the library from the library store (e.g.
+      # the Rust bootstrapping process pulls down the Kurtosis Core library from
+      # crates.io)
+      - validate_bootstraps:
+          context:
+            - docker-user
+          requires:
+            - push_docker_image
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+      - push_docker_image:
+          context:
+            - docker-user
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
       # -- End PR check jobs ---------------------------------------
 
       # -- Artifact-publishing jobs --------------------------------
