@@ -2,10 +2,9 @@
 # ^^^^^^^^^^^^^^^^^ this is the most platform-agnostic way to guarantee this script runs with Bash
 # 2021-07-08 WATERMARK, DO NOT REMOVE - This script was generated from the Kurtosis Bash script template
 
-set -euo pipefail   # Bash "strict mode"
+set -euo pipefail # Bash "strict mode"
 script_dirpath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dirpath="$(dirname "${script_dirpath}")"
-
 
 # ==================================================================================================
 #                                             Constants
@@ -13,24 +12,16 @@ root_dirpath="$(dirname "${script_dirpath}")"
 IMAGE_NAME="kurtosistech/kurtosis-lambda-starter-pack"
 KURTOSIS_LAMBDA_FOLDER="kurtosis-lambda"
 
-
 # =============================================================================
 #                                 Main Code
 # =============================================================================
-# Build Dockerfile
-# Captures the first of tag > branch > commit
-git_ref="$(cd "${root_dirpath}" && git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD)"
-if [ "${git_ref}" == "" ]; then
-  echo "Error: Could not determine a Git ref to use for the Docker tag; is the repo a Git directory?" >&2
-  exit 1
-fi
-
-
+# Checks if dockerignore file is in the root path
 if ! [ -f "${root_dirpath}"/.dockerignore ]; then
   echo "Error: No .dockerignore file found in root of repo '${root_dirpath}'; this is required so Docker caching is enabled and your Kurtosis Lambda builds remain quick" >&2
   exit 1
 fi
 
+# Builds Dockerfile
 dockerfile_filepath="${root_dirpath}/${KURTOSIS_LAMBDA_FOLDER}/Dockerfile"
 echo "Building Kurtosis Lambda into a Docker image named '${IMAGE_NAME}'..."
 # The BUILD_TIMESTAMP variable is provided because Docker sometimes caches steps it shouldn't and we need a constantly-changing ARG so that we can intentionally bust the cache

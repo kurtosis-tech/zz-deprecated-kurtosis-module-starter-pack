@@ -122,8 +122,13 @@ My Kurtosis Lambda
 =====================
 Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
 
+Quickstart steps:
 1. Customize your own Kurtosis Lambda by editing the generated files inside the `/path/to/your/code/repos/kurtosis-lambda/impl` folder
-  1. Follow the bootstrap instructions
+    1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis Lambda
+    1. Write the functionality of your Kurtosis Lambda inside your implementation of the `KurtosisLambda.execute` method by using the serialized parameters (validating & sanitizing the parameters as necessary)
+    1. Write an implementation of `KurtosisLambdaConfigurator` that accepts configuration parameters and produces an instance of your custom Kurtosis Lambda
+    1. Edit the main file and replace the example `KurtosisLambdaConfigurator` with your own implementation that produces your custom Lambda
+    1. Run `path/to/your/code/repos/scripts/build.sh` to package your Kurtosis Lambda into a Docker image that can be used inside Kurtosis
 
 EOF
 if [ "${?}" -ne 0 ]; then
@@ -158,4 +163,5 @@ scripts_dirpath="${output_dirpath}/${SCRIPTS_DIRNAME}"
 bash "${scripts_dirpath}/${BUILD_FILENAME}"
 
 echo "Bootstrap successful!"
-echo "For next steps, follow the instructions in the README at /path/to/new/README"
+echo "To build the Lambda, run '${scripts_dirpath}/${BUILD_FILENAME}'"
+echo "To customize your Lambda, follow the steps in '${output_readme_filepath}'"
