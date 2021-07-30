@@ -70,7 +70,7 @@ done
 
 # Validation, to save us in case someone changes stuff in the future
 go_mod_filepath="${output_dirpath}/${GO_MOD_FILENAME}"
-if [ "$(grep "^${GO_MOD_MODULE_KEYWORD}" "${go_mod_filepath}" | wc -l)" -ne 1 ]; then
+if [ "$(grep -c "^${GO_MOD_MODULE_KEYWORD}" "${go_mod_filepath}")" -ne 1 ]; then
   echo "Validation failed: Could not find exactly one line in ${GO_MOD_FILENAME} with keyword '${GO_MOD_MODULE_KEYWORD}' for use when replacing with the user's module name" >&2
   exit 1
 fi
@@ -91,7 +91,7 @@ fi
 # Validation, to save us in case someone changes stuff in the future
 image_name_replacement_pattern="^${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\".*\"$"
 build_script_filepath="${output_dirpath}/${SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
-if [ "$(grep "${image_name_replacement_pattern}" "${build_script_filepath}")" -ne 1 ]; then
+if [ "$(grep -c "${image_name_replacement_pattern}" "${build_script_filepath}")" -ne 1 ]; then
   echo "Validation failed: Could not find exactly one line in ${BUILD_SCRIPT_FILENAME} with pattern '${image_name_replacement_pattern}' for use when replacing with the user's Docker image name" >&2
   exit 1
 fi
