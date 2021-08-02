@@ -15,7 +15,8 @@ ALLOWED_IMAGE_NAME_CHARS='a-z0-9._/-'
 SUPPORTED_LANGS_FILENAME="supported-languages.txt"
 
 # Build script
-BUILD_FILENAME="build.sh"
+BUILD_SCRIPT_FILENAME="build.sh"
+BUILD_SCRIPT_IMAGE_NAME_VAR_NAME="IMAGE_NAME"
 
 # Script for prepping a new Kurtosis Lambda repo
 PREP_NEW_REPO_FILENAME="prep-new-repo.sh"
@@ -25,6 +26,10 @@ OUTPUT_README_FILENAME="README.md"
 KURTOSIS_LAMBDA_FOLDER="kurtosis-lambda"
 
 SCRIPTS_DIRNAME="scripts"
+
+# Frustratingly, there's no way to say "do in-place replacement" in sed that's compatible on both Mac and Linux
+# Instead, we add this suffix and delete the backup files after
+SED_INPLACE_FILE_SUFFIX=".sedreplace"
 
 # =============================================================================
 #                             Pre-Arg Parsing
@@ -115,13 +120,27 @@ if ! bash "${prep_new_repo_script_filepath}" "${lang_dirpath}" "${output_dirpath
   exit 1
 fi
 
+# Replacing Docker image name in build script
+# Validation, to save us in case someone changes stuff in the future
+image_name_replacement_pattern="^${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\".*\"$"
+build_script_filepath="${output_dirpath}/${SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
+if [ "$(grep -c "${image_name_replacement_pattern}" "${build_script_filepath}")" -ne 1 ]; then
+  echo "Validation failed: Could not find exactly one line in ${BUILD_SCRIPT_FILENAME} with pattern '${image_name_replacement_pattern}' for use when replacing with the user's Docker image name" >&2
+  exit 1
+fi
+
+# Replace Docker image names in code (we need the "-i '' " argument because Mac sed requires it)
+if ! sed -i"${SED_INPLACE_FILE_SUFFIX}" "s,${image_name_replacement_pattern},${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\"${lambda_image}\",g" "${build_script_filepath}"; then
+  echo "Error: Could not replace Docker image name in build file '${build_script_filepath}'" >&2
+  exit 1
+fi
+
 # README file
 output_readme_filepath="${output_dirpath}/${OUTPUT_README_FILENAME}"
 cat <<EOF >"${output_readme_filepath}"
 My Kurtosis Lambda
 =====================
 Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
-
 Quickstart steps:
 1. Customize your own Kurtosis Lambda by editing the generated files inside the `/path/to/your/code/repos/kurtosis-lambda/impl` folder
     1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis Lambda
@@ -129,7 +148,6 @@ Quickstart steps:
     1. Write an implementation of `KurtosisLambdaConfigurator` that accepts configuration parameters and produces an instance of your custom Kurtosis Lambda
     1. Edit the main file and replace the example `KurtosisLambdaConfigurator` with your own implementation that produces your custom Lambda
     1. Run `path/to/your/code/repos/scripts/build.sh` to package your Kurtosis Lambda into a Docker image that can be used inside Kurtosis
-
 EOF
 if [ "${?}" -ne 0 ]; then
   echo "Error: Could not write README file to '${output_readme_filepath}'" >&2
@@ -160,8 +178,14 @@ fi
 
 #Runs build script
 scripts_dirpath="${output_dirpath}/${SCRIPTS_DIRNAME}"
-bash "${scripts_dirpath}/${BUILD_FILENAME}"
+bash "${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}"
 
 echo "Bootstrap successful!"
-echo "To build the Lambda, run '${scripts_dirpath}/${BUILD_FILENAME}'"
+echo "To build the Lambda, run '${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}'"
 echo "To customize your Lambda, follow the steps in '${output_readme_filepath}'"
+
+# NOTE: Leave this as the last command in the file!! It removes all the backup files created by our in-place sed (see above for why this is necessary)
+if ! find "${output_dirpath}" -name "*${SED_INPLACE_FILE_SUFFIX}" -delete; then
+  echo "Error: Failed to remove the backup files suffixed with '${SED_INPLACE_FILE_SUFFIX}' that we created doing in-place string replacement with sed" >&2
+  exit 1
+fi

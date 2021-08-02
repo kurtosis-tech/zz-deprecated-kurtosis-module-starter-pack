@@ -9,9 +9,6 @@ SCRIPTS_DIRNAME="scripts"
 GO_MOD_FILENAME="go.mod"
 GO_MOD_MODULE_KEYWORD="module " # The key we'll look for when replacing the module name in go.mod
 
-BUILD_SCRIPT_FILENAME="build.sh"
-BUILD_SCRIPT_IMAGE_NAME_VAR_NAME="IMAGE_NAME"
-
 # Frustratingly, there's no way to say "do in-place replacement" in sed that's compatible on both Mac and Linux
 # Instead, we add this suffix and delete the backup files after
 SED_INPLACE_FILE_SUFFIX=".sedreplace"
@@ -36,12 +33,6 @@ if [ -z "${output_dirpath}" ]; then
 fi
 if ! [ -d "${output_dirpath}" ]; then
   echo "Error: Output dirpath to copy to '${output_dirpath}' is nonexistent" >&2
-  exit 1
-fi
-
-new_image_name="${3:-}"
-if [ -z "${new_image_name}" ]; then
-  echo "Error: Empty Docker image name" >&2
   exit 1
 fi
 
@@ -84,21 +75,6 @@ fi
 # We search for old_module_name/kurtosis-lambda because we don't want the old_module_name/lib entries to get renamed
 if ! sed -i"${SED_INPLACE_FILE_SUFFIX}" "s,${existing_module_name}/${LAMBDA_IMPL_DIRNAME},${new_module_name}/${LAMBDA_IMPL_DIRNAME},g" $(find "${output_dirpath}" -type f); then
   echo "Error: Could not replace Go module name in code files" >&2
-  exit 1
-fi
-
-# Replacing Docker image name in build script
-# Validation, to save us in case someone changes stuff in the future
-image_name_replacement_pattern="^${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\".*\"$"
-build_script_filepath="${output_dirpath}/${SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
-if [ "$(grep -c "${image_name_replacement_pattern}" "${build_script_filepath}")" -ne 1 ]; then
-  echo "Validation failed: Could not find exactly one line in ${BUILD_SCRIPT_FILENAME} with pattern '${image_name_replacement_pattern}' for use when replacing with the user's Docker image name" >&2
-  exit 1
-fi
-
-# Replace Docker image names in code (we need the "-i '' " argument because Mac sed requires it)
-if ! sed -i"${SED_INPLACE_FILE_SUFFIX}" "s,${image_name_replacement_pattern},${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\"${new_image_name}\",g" "${build_script_filepath}"; then
-  echo "Error: Could not replace Docker image name in build file '${build_script_filepath}'" >&2
   exit 1
 fi
 
