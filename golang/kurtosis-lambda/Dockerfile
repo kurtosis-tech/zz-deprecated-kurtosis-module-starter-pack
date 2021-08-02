@@ -19,7 +19,7 @@ COPY . .
 RUN go test ./...
 
 # Build the application
-RUN GOOS=linux go build -o lambda.bin main.go
+RUN GOOS=linux go build -o kurtosis-lambda.bin ./kurtosis-lambda/main.go
 
 # ============= Execution Stage ================
 FROM alpine:3.12 AS execution
@@ -27,8 +27,8 @@ FROM alpine:3.12 AS execution
 WORKDIR /run
 
 # Copy the code into the container
-COPY --from=builder /build/lambda.bin .
+COPY --from=builder /build/kurtosis-lambda.bin .
 
 # Execute Lambda
-CMD ./lambda.bin
+CMD ./kurtosis-lambda.bin
 

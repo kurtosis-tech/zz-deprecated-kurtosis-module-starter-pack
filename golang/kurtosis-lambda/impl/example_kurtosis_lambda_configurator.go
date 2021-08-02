@@ -3,11 +3,11 @@
  * All Rights Reserved.
  */
 
-package lambda
+package impl
 
 import (
 	"encoding/json"
-	"github.com/kurtosis-tech/kurtosis-lambda-api-lib/golang/lib/lambda"
+	kurtosis_lambda "github.com/kurtosis-tech/kurtosis-lambda-api-lib/golang/lib/kurtosis-lambda"
 	"github.com/palantir/stacktrace"
 	"github.com/sirupsen/logrus"
 )
@@ -16,17 +16,17 @@ const(
 	defaultLogLevel = "info"
 )
 
-type ExampleLambdaConfigurator struct{}
+type ExampleKurtosisLambdaConfigurator struct{}
 
-func NewExampleLambdaConfigurator() *ExampleLambdaConfigurator {
-	return &ExampleLambdaConfigurator{}
+func NewExampleKurtosisLambdaConfigurator() *ExampleKurtosisLambdaConfigurator {
+	return &ExampleKurtosisLambdaConfigurator{}
 }
 
-func (t ExampleLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomParamsStr string) (lambda.Lambda, error) {
+func (t ExampleKurtosisLambdaConfigurator) ParseParamsAndCreateKurtosisLambda(serializedCustomParamsStr string) (kurtosis_lambda.KurtosisLambda, error) {
 	serializedCustomParamsBytes := []byte(serializedCustomParamsStr)
-	var args ExampleLambdaArgs
+	var args ExampleKurtosisLambdaArgs
 	if err := json.Unmarshal(serializedCustomParamsBytes, &args); err != nil {
-		return nil, stacktrace.Propagate(err, "An error occurred deserializing the Lambda serialized custom params with value '%v", serializedCustomParamsStr)
+		return nil, stacktrace.Propagate(err, "An error occurred deserializing the Kurtosis Lambda serialized custom params with value '%v", serializedCustomParamsStr)
 	}
 
 	err := setLogLevel(args.LogLevel)
@@ -34,7 +34,7 @@ func (t ExampleLambdaConfigurator) ParseParamsAndCreateLambda(serializedCustomPa
 		return nil, stacktrace.Propagate(err, "An error occurred setting the log level")
 	}
 
-	lambda := NewExampleLambda()
+	lambda := NewExampleKurtosisLambda()
 
 	return lambda, nil
 }

@@ -8,6 +8,7 @@
 * Added golang directory and go mod file
 * Added shell script to execute kurtosis release repository script for this repository
 * Implement `ExampleLambda` execute method
+* Added bootstrap script; users can use it to start creating their own implementation of Kurtosis Lambda
 * Added supported-languages file
 
 #0.1.0

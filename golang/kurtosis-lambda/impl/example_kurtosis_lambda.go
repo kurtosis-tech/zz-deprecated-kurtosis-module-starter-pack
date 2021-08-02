@@ -1,4 +1,4 @@
-package lambda
+package impl
 
 import (
 	"encoding/json"
@@ -22,40 +22,40 @@ var (
 	}
 )
 
-type ExampleLambda struct {
+type ExampleKurtosisLambda struct {
 }
 
-type ExampleLambdaParams struct {
+type ExampleKurtosisLambdaParams struct {
 	IWantATip bool `json:"i_want_a_tip"`
 }
 
-type ExampleLambdaResult struct {
+type ExampleKurtosisLambdaResult struct {
 	Tip string `json:"tip"`
 }
 
-func NewExampleLambda() *ExampleLambda {
-	return &ExampleLambda{}
+func NewExampleKurtosisLambda() *ExampleKurtosisLambda {
+	return &ExampleKurtosisLambda{}
 }
 
-func (e ExampleLambda) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
-	logrus.Infof("Example Lambda receives serializedParams '%v'", serializedParams)
+func (e ExampleKurtosisLambda) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
+	logrus.Infof("Example Kurtosis Lambda receives serializedParams '%v'", serializedParams)
 	serializedParamsBytes := []byte(serializedParams)
-	var params ExampleLambdaParams
+	var params ExampleKurtosisLambdaParams
 	if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Lambda serialized params with value '%v'", serializedParams)
+		return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Kurtosis Lambda serialized params with value '%v'", serializedParams)
 	}
 
-	exampleLambdaResult := &ExampleLambdaResult{
+	exampleKurtosisLambdaResult := &ExampleKurtosisLambdaResult{
 		Tip: getRandomTip(params.IWantATip),
 	}
 
-	result, err := json.Marshal(exampleLambdaResult)
+	result, err := json.Marshal(exampleKurtosisLambdaResult)
 	if err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Lambda Result with value '%+v'", exampleLambdaResult)
+		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
 	}
 	stringResult := string(result)
 
-	logrus.Info("Example Lambda executed successfully")
+	logrus.Info("Example Kurtosis Lambda executed successfully")
 	return stringResult, nil
 }
 
