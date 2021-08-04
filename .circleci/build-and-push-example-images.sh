@@ -1,24 +1,29 @@
-set -euo pipefail
-script_dirpath="$(cd "$(dirname "${0}")" && pwd)"
+#!/usr/bin/env bash
+# ^^^^^^^^^^^^^^^^^ this is the most platform-agnostic way to guarantee this script runs with Bash
+# 2021-07-08 WATERMARK, DO NOT REMOVE - This script was generated from the Kurtosis Bash script template
+
+set -euo pipefail   # Bash "strict mode"
+script_dirpath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_dirpath="$(dirname "${script_dirpath}")"
 
-# ==========================================================================================
-#                                         Constants
-# ==========================================================================================
+
+
+# ==================================================================================================
+#                                             Constants
+# ==================================================================================================
 KURTOSIS_DOCKERHUB_ORG="kurtosistech"
 LANG_SCRIPTS_DIRNAME="scripts"
-BUILD_FILENAME="build"
+BUILD_SCRIPT_FILENAME="build.sh"
 
-# ==========================================================================================
-#                                        Arg-parsing
-# ==========================================================================================
+
+
+# ==================================================================================================
+#                                       Arg Parsing & Validation
+# ==================================================================================================
 docker_username="${1:-}"
 docker_password_DO_NOT_LOG="${2:-}" # WARNING: DO NOT EVER LOG THIS!!
 circleci_git_tag="${3:-}"   # This should be mutually exclusive with the CircleCI Git branch
 
-# ==========================================================================================
-#                                        Arg validation
-# ==========================================================================================
 if [ -z "${docker_username}" ]; then
     echo "Error: Docker username cannot be empty" >&2
     exit 1
@@ -32,9 +37,11 @@ if [ -z "${circleci_git_tag}" ]; then
     exit 1
 fi
 
-# ==========================================================================================
-#                                           Main code
-# ==========================================================================================
+
+
+# ==================================================================================================
+#                                             Main Logic
+# ==================================================================================================
 # Docker is restricting anonymous image pulls, so we log in before we do any pulling
 if ! docker login -u "${docker_username}" -p "${docker_password_DO_NOT_LOG}"; then
     echo "Error: Logging in to Docker failed" >&2
@@ -45,7 +52,7 @@ echo "Pushing example Kurtosis Lambda Docker images to Dockerhub..."
 supported_langs_filepath="${root_dirpath}/supported-languages.txt"
 for lang in $(cat "${supported_langs_filepath}"); do
     echo "Building ${lang} Docker image..."
-    buildscript_filepath="${root_dirpath}/${lang}/${LANG_SCRIPTS_DIRNAME}/${BUILD_FILENAME}"
+    buildscript_filepath="${root_dirpath}/${lang}/${LANG_SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
     if ! bash "${buildscript_filepath}" build; then
         echo "Error: Building example ${lang} image failed" >&2
         exit 1

@@ -10,7 +10,7 @@
 * Implement `ExampleLambda` execute method
 * Added bootstrap script; users can use it to start creating their own implementation of Kurtosis Lambda
 * Added supported-languages file
-* Added script for validate bootstrap during CI
+* Added script for validating bootstrap during CI
 
 #0.1.0
 * Init commit
