@@ -32,7 +32,7 @@ jobs:
             sudo npm install -g markdown-link-check
             bash .circleci/check-markdown-links.sh
 
-  check_golang:
+  check_code:
     executor: ubuntu_vm
     steps:
       - checkout
@@ -44,13 +44,15 @@ jobs:
             circleci-agent step halt
           fi
 
-      - run: golang/scripts/build.sh
+      - run: bash .circleci/validate-bootstrap.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
 
 workflows:
   build:
     jobs:
       # -- PR check jobs ------------------------------------------
-      - check_golang:
+      - check_code:
+          context:
+            - docker-user
           filters:
             branches:
               ignore:
