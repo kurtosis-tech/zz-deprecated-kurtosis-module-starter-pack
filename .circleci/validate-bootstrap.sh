@@ -9,7 +9,7 @@ BOOTSTRAP_SCRIPTS_DIRNAME="bootstrap"
 BOOTSTRAP_SCRIPT_FILENAME="bootstrap.sh"
 SUPPORTED_LANGS_FILENAME="supported-languages.txt"
 SCRIPTS_DIRNAME_INSIDE_KURTOSIS_LAMBDA="scripts"
-BUILD_FILENAME="build.sh"
+BUILD_SCRIPT_FILENAME="build.sh"
 
 GIT_USER_EMAIL_PROPERTY="user.email"
 GIT_USER_NAME_PROPERTY="user.name"
@@ -75,7 +75,7 @@ for lang in $(cat "${root_dirpath}/${SUPPORTED_LANGS_FILENAME}"); do
         exit 1
     fi
 
-    build_filepath="${output_dirpath}/${SCRIPTS_DIRNAME_INSIDE_KURTOSIS_LAMBDA}/${BUILD_FILENAME}"
+    build_filepath="${output_dirpath}/${SCRIPTS_DIRNAME_INSIDE_KURTOSIS_LAMBDA}/${BUILD_SCRIPT_FILENAME}"
     if ! "${build_filepath}"; then
         echo "Error: The bootstrapped ${lang} Kurtosis Lambda failed" >&2
         exit 1
