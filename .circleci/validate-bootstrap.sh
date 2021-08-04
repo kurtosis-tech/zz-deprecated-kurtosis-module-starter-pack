@@ -18,7 +18,7 @@ GIT_USER_NAME_PROPERTY="user.name"
 #  certain variables so this isn't required for CI
 # NOTE: This won't handle flag values that contain spaces, though it can handle multiple flags separated by a space
 declare -A CUSTOM_LANG_BOOTSTRAP_FLAGS 
-CUSTOM_LANG_BOOTSTRAP_FLAGS[golang]="GO_NEW_MODULE_NAME=github.com//-module"
+CUSTOM_LANG_BOOTSTRAP_FLAGS[golang]="GO_NEW_MODULE_NAME=github.com/test/test-module"
 
 
 
