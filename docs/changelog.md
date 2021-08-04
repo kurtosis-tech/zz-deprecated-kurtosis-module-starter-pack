@@ -1,4 +1,6 @@
 # TBD
+
+# 0.1.1
 ### Features
 * Added `ExampleLambda` which is an example of how to implement a Kurtosis Lambda
 * Added `ExampleLambdaConfigurator` and `ExampleLambdaArgs` which are used to start the `ExampleLambda`implementation 
