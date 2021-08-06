@@ -1,4 +1,6 @@
 # TBD
+### Features
+* Added the Unlicense, dedicating this to the public domain
 
 # 0.1.1
 ### Features
