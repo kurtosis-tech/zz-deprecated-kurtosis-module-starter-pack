@@ -11,6 +11,12 @@ executors:
 #  images), so we run everything inside a single job.
 # See also: https://discuss.circleci.com/t/can-docker-images-be-preserved-between-jobs-in-a-workflow-without-a-manual-load-save/23388/12
 jobs:
+  check_code:
+    executor: ubuntu_vm
+    steps:
+      - checkout
+      - run: bash .circleci/validate-all-bootstraps.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
+
   check_docs:
     docker:
       # Needed for `npm install` down below
@@ -32,24 +38,10 @@ jobs:
             sudo npm install -g markdown-link-check
             bash .circleci/check-markdown-links.sh
 
-  check_code:
-    executor: ubuntu_vm
-    steps:
-      - checkout
-
-      # If the only changes are to the docs, don't run the slow (and expensive) code checks
-      # `git diff --exit-code` returns 0 exit code if no changes, and 1 if changes
-      - run: |
-          if git --no-pager diff --exit-code origin/develop...HEAD -- . ':!docs'; then
-            circleci-agent step halt
-          fi
-
-      - run: bash .circleci/validate-bootstrap.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
-
 workflows:
   build:
     jobs:
-      # -- PR check jobs ------------------------------------------
+      # ============ Jobs that run upon PR submission ===============
       - check_code:
           context:
             - docker-user
@@ -64,8 +56,6 @@ workflows:
               ignore:
                 - develop
                 - master
-      # -- End PR check jobs ---------------------------------------
 
-      # -- Artifact-publishing jobs --------------------------------
-      # TODO Implement when we have a language that needs artifact-publishing
-      # -- End artifact-publishing jobs ----------------------------
+      # ============== Jobs that run upon release ==================
+      # None for now
