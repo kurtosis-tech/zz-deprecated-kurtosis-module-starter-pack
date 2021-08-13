@@ -4,6 +4,7 @@
 
 ### Fixes
 * Fixed escaping of backticks in the README file generated during bootstrap
+* Fixed bootstrap deleting sed-replace files after Git init, which meant the newly-generated repos would already have unstaged changes
 
 # 0.1.1
 ### Features

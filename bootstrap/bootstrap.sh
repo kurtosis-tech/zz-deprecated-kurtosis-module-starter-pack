@@ -154,6 +154,13 @@ if [ "${?}" -ne 0 ]; then
   exit 1
 fi
 
+# NOTE: Leave this as the last step before Git init!!!!
+# It removes all the backup files created by our in-place sed (see above for why this is necessary)
+if ! find "${output_dirpath}" -name "*${SED_INPLACE_FILE_SUFFIX}" -delete; then
+  echo "Error: Failed to remove the backup files suffixed with '${SED_INPLACE_FILE_SUFFIX}' that we created doing in-place string replacement with sed" >&2
+  exit 1
+fi
+
 #Initialize the new repo as a Git directory, because running the Kurtosis Lambda depends on it
 if ! command -v git &> /dev/null; then
     echo "Error: Git is required to create a new Kurtosis Lambda repo, but it is not installed" >&2
@@ -183,9 +190,3 @@ bash "${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}"
 echo "Bootstrap successful!"
 echo "To build the Lambda, run '${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}'"
 echo "To customize your Lambda, follow the steps in '${output_readme_filepath}'"
-
-# NOTE: Leave this as the last command in the file!! It removes all the backup files created by our in-place sed (see above for why this is necessary)
-if ! find "${output_dirpath}" -name "*${SED_INPLACE_FILE_SUFFIX}" -delete; then
-  echo "Error: Failed to remove the backup files suffixed with '${SED_INPLACE_FILE_SUFFIX}' that we created doing in-place string replacement with sed" >&2
-  exit 1
-fi
