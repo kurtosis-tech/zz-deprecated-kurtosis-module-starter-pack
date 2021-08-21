@@ -46,12 +46,6 @@ workflows:
               ignore:
                 - develop
                 - master
-      - check_docs:
-          filters:
-            branches:
-              ignore:
-                - develop
-                - master
 
       # ============== Jobs that run upon release ==================
       # None for now
