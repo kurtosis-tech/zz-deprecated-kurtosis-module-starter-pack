@@ -21,5 +21,5 @@
 * Added supported-languages file
 * Added script for validating bootstrap during CI
 
-#0.1.0
+# 0.1.0
 * Init commit
