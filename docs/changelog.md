@@ -1,6 +1,7 @@
 # TBD
 ### Features
 * Added the Unlicense, dedicating this to the public domain
+* Validate bootstraps on every PR
 
 ### Fixes
 * Fixed escaping of backticks in the README file generated during bootstrap

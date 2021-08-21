@@ -77,9 +77,9 @@ for lang in $(cat "${root_dirpath}/${SUPPORTED_LANGS_FILENAME}"); do
 
     build_filepath="${output_dirpath}/${SCRIPTS_DIRNAME_INSIDE_KURTOSIS_LAMBDA}/${BUILD_SCRIPT_FILENAME}"
     if ! "${build_filepath}"; then
-        echo "Error: The bootstrapped ${lang} Kurtosis Lambda failed" >&2
+        echo "Error: The build of the bootstrapped ${lang} Kurtosis Lambda failed" >&2
         exit 1
     fi
-    echo "Successfully bootstrapped and ran new ${lang} Kurtosis Lambda"
+    echo "Successfully bootstrapped and built new ${lang} Kurtosis Lambda"
 done
-echo "Successfully bootstrapped and ran new Kurtosis Lambda for all languages!"
+echo "Successfully bootstrapped and ran new Kurtosis Lambdas for all languages!"
