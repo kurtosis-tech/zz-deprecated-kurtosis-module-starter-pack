@@ -142,15 +142,22 @@ My Kurtosis Lambda
 =====================
 Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
 Quickstart steps:
-1. Customize your own Kurtosis Lambda by editing the generated files inside the `/path/to/your/code/repos/kurtosis-lambda/impl` folder
+1. Customize your own Kurtosis Lambda by editing the generated files inside the \`/path/to/your/code/repos/kurtosis-lambda/impl\` folder
     1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis Lambda
-    1. Write the functionality of your Kurtosis Lambda inside your implementation of the `KurtosisLambda.execute` method by using the serialized parameters (validating & sanitizing the parameters as necessary)
-    1. Write an implementation of `KurtosisLambdaConfigurator` that accepts configuration parameters and produces an instance of your custom Kurtosis Lambda
-    1. Edit the main file and replace the example `KurtosisLambdaConfigurator` with your own implementation that produces your custom Lambda
-    1. Run `path/to/your/code/repos/scripts/build.sh` to package your Kurtosis Lambda into a Docker image that can be used inside Kurtosis
+    1. Write the functionality of your Kurtosis Lambda inside your implementation of the \`KurtosisLambda.execute\` method by using the serialized parameters (validating & sanitizing the parameters as necessary)
+    1. Write an implementation of \`KurtosisLambdaConfigurator\` that accepts configuration parameters and produces an instance of your custom Kurtosis Lambda
+    1. Edit the main file and replace the example \`KurtosisLambdaConfigurator\` with your own implementation that produces your custom Lambda
+    1. Run \`path/to/your/code/repos/scripts/build.sh\` to package your Kurtosis Lambda into a Docker image that can be used inside Kurtosis
 EOF
 if [ "${?}" -ne 0 ]; then
   echo "Error: Could not write README file to '${output_readme_filepath}'" >&2
+  exit 1
+fi
+
+# NOTE: Leave this as the last step before Git init!!!!
+# It removes all the backup files created by our in-place sed (see above for why this is necessary)
+if ! find "${output_dirpath}" -name "*${SED_INPLACE_FILE_SUFFIX}" -delete; then
+  echo "Error: Failed to remove the backup files suffixed with '${SED_INPLACE_FILE_SUFFIX}' that we created doing in-place string replacement with sed" >&2
   exit 1
 fi
 
@@ -183,9 +190,3 @@ bash "${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}"
 echo "Bootstrap successful!"
 echo "To build the Lambda, run '${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}'"
 echo "To customize your Lambda, follow the steps in '${output_readme_filepath}'"
-
-# NOTE: Leave this as the last command in the file!! It removes all the backup files created by our in-place sed (see above for why this is necessary)
-if ! find "${output_dirpath}" -name "*${SED_INPLACE_FILE_SUFFIX}" -delete; then
-  echo "Error: Failed to remove the backup files suffixed with '${SED_INPLACE_FILE_SUFFIX}' that we created doing in-place string replacement with sed" >&2
-  exit 1
-fi
