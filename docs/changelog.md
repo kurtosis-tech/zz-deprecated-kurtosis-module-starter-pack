@@ -1,4 +1,6 @@
 # TBD
+
+# 0.1.2
 ### Features
 * Added the Unlicense, dedicating this to the public domain
 * Validate bootstraps on every PR
