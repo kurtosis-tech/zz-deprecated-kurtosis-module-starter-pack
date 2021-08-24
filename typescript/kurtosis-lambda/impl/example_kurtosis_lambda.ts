@@ -1,33 +1,25 @@
-package impl
 
-import (
-	"encoding/json"
-	"github.com/kurtosis-tech/kurtosis-client/golang/lib/networks"
-	"github.com/palantir/stacktrace"
-	"github.com/sirupsen/logrus"
-	"math/rand"
-	"time"
-)
+const TIPS_REPOSITORY: string[] = [
+    "Everything not saved will be lost.",
+    "Don't pet a burning dog.",
+    "Even a broken clock is right twice a day.",
+    "If no one comes from the future to stop you from doing it, then how bad of a decision can it really be?",
+    "Never fall in love with a tennis player. Love means nothing to them.",
+    "If you ever get caught sleeping on the job, slowly raise your head and say 'In Jesus' name, Amen'",
+    "Never trust in an electrician with no eyebrows",
+    "If you sleep until lunch time, you can save the breakfast money.",
+];
 
-var (
-	tipsRepository = []string{
-		"Everything not saved will be lost.",
-		"Don't pet a burning dog.",
-		"Even a broken clock is right twice a day.",
-		"If no one comes from the future to stop you from doing it, then how bad of a decision can it really be?",
-		"Never fall in love with a tennis player. Love means nothing to them.",
-		"If you ever get caught sleeping on the job, slowly raise your head and say 'In Jesus' name, Amen'",
-		"Never trust in an electrician with no eyebrows",
-		"If you sleep until lunch time, you can save the breakfast money.",
-	}
-)
-
-type ExampleKurtosisLambda struct {
+class ExampleKurtosisLambda {
+    constructor() {}
 }
 
-type ExampleKurtosisLambdaParams struct {
-	IWantATip bool `json:"iWantATip"`
+class ExampleKurtosisLambdaParams {
+    readonly iWantATip: boolean;
 }
+
+
+/*
 
 type ExampleKurtosisLambdaResult struct {
 	Tip string `json:"tip"`
@@ -69,3 +61,4 @@ func getRandomTip(shouldGiveAdvice bool) string {
 	}
 	return tip
 }
+*/
