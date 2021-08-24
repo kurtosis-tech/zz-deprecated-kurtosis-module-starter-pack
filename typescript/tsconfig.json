@@ -2,7 +2,8 @@
     "compilerOptions": {
         "module": "commonjs",
         "outDir": "build",
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "strict": true
     },
     "include": [
         "kurtosis-lambda/**/*"

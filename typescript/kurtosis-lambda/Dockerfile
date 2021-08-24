@@ -1,39 +1,3 @@
-# kevins-image
-FROM scratch
-
-WORKDIR /build
-
-COPY ~/kevins-file.txt .
-
-
-
-
-
-
-
-# node-alpine
-FROM alpine
-
-RUN ...something to install npm....
-
-RUN npm install yarn
-
-
-
-
-# generate-protoc-bindings Docker image
-FROM protoc
-
-RUN ...install ts-protoc-gen....
-
-RUN ...install go-protoc-gen....
-
-MOUNT . /source-files
-
-CMD protoc --js_out=/source-files/out
-
-
-# Testsuite Starter Pack
 FROM node:14.17 AS builder
 
 WORKDIR /build
