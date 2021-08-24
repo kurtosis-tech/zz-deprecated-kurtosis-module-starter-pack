@@ -2,6 +2,9 @@
 ### Changes
 * Switch to using productized docs-checker orb
 
+### Features
+* Added Typescript
+
 # 0.1.2
 ### Features
 * Added the Unlicense, dedicating this to the public domain
