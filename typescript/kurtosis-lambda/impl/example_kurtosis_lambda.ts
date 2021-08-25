@@ -22,43 +22,43 @@ class ExampleKurtosisLambdaParams {
 /*
 
 type ExampleKurtosisLambdaResult struct {
-	Tip string `json:"tip"`
+    Tip string `json:"tip"`
 }
 
 func NewExampleKurtosisLambda() *ExampleKurtosisLambda {
-	return &ExampleKurtosisLambda{}
+    return &ExampleKurtosisLambda{}
 }
 
 func (e ExampleKurtosisLambda) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
-	logrus.Infof("Example Kurtosis Lambda receives serializedParams '%v'", serializedParams)
-	serializedParamsBytes := []byte(serializedParams)
-	var params ExampleKurtosisLambdaParams
-	if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Kurtosis Lambda serialized params with value '%v'", serializedParams)
-	}
+    logrus.Infof("Example Kurtosis Lambda receives serializedParams '%v'", serializedParams)
+    serializedParamsBytes := []byte(serializedParams)
+    var params ExampleKurtosisLambdaParams
+    if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
+        return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Kurtosis Lambda serialized params with value '%v'", serializedParams)
+    }
 
-	exampleKurtosisLambdaResult := &ExampleKurtosisLambdaResult{
-		Tip: getRandomTip(params.IWantATip),
-	}
+    exampleKurtosisLambdaResult := &ExampleKurtosisLambdaResult{
+        Tip: getRandomTip(params.IWantATip),
+    }
 
-	result, err := json.Marshal(exampleKurtosisLambdaResult)
-	if err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
-	}
-	stringResult := string(result)
+    result, err := json.Marshal(exampleKurtosisLambdaResult)
+    if err != nil {
+        return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
+    }
+    stringResult := string(result)
 
-	logrus.Info("Example Kurtosis Lambda executed successfully")
-	return stringResult, nil
+    logrus.Info("Example Kurtosis Lambda executed successfully")
+    return stringResult, nil
 }
 
 func getRandomTip(shouldGiveAdvice bool) string {
-	var tip string
-	if shouldGiveAdvice {
-		rand.Seed(time.Now().Unix())
-		tip = tipsRepository[rand.Intn(len(tipsRepository))]
-	} else {
-		tip = "Kurtosis Lambda Example won't enlighten you today."
-	}
-	return tip
+    var tip string
+    if shouldGiveAdvice {
+        rand.Seed(time.Now().Unix())
+        tip = tipsRepository[rand.Intn(len(tipsRepository))]
+    } else {
+        tip = "Kurtosis Lambda Example won't enlighten you today."
+    }
+    return tip
 }
 */
