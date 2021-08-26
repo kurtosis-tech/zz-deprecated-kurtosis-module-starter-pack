@@ -73,7 +73,7 @@ for lang in $(cat "${root_dirpath}/${SUPPORTED_LANGS_FILENAME}"); do
     kurtosis_lambda_image="bootstrap-kurtosis-lambda-${lang}-image"
     lang_specific_vars_to_set="${CUSTOM_LANG_BOOTSTRAP_FLAGS[${lang}]:-"${MISSING_BOOTSTRAP_FLAGS_KEY}"}"
     if [ "${lang_specific_vars_to_set}" == "${MISSING_BOOTSTRAP_FLAGS_KEY}" ]; then
-        echo "Error: No custom bootstrap flas were defined for ${lang}; this bootstrapping script needs to be updated with them" >&2
+        echo "Error: No custom bootstrap flas were defined for ${lang}; this bootstrap validation script needs to be updated with them" >&2
         exit 1
     fi
     command="${lang_specific_vars_to_set} ${bootstrap_script_filepath} ${lang} ${output_dirpath} ${kurtosis_lambda_image}"
