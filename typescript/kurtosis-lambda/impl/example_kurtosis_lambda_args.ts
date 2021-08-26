@@ -1,3 +1,3 @@
-class ExampleKurtosisLambdaArgs {
-    readonly logLevel: string;
+interface ExampleKurtosisLambdaArgs {
+    logLevel: string;
 }

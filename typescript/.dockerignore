@@ -11,3 +11,4 @@ LICENSE
 scripts
 kurtosis-lambda/Dockerfile
 node_modules
+build

@@ -1,3 +1,7 @@
+import { NetworkContext } from "kurtosis-core-api-lib";
+import { KurtosisLambda } from "kurtosis-lambda-api-lib";
+import { Result, ok, err } from "neverthrow";
+import * as log from "loglevel";
 
 const TIPS_REPOSITORY: string[] = [
     "Everything not saved will be lost.",
@@ -10,55 +14,65 @@ const TIPS_REPOSITORY: string[] = [
     "If you sleep until lunch time, you can save the breakfast money.",
 ];
 
-class ExampleKurtosisLambda {
+interface ExampleKurtosisLambdaParams {
+    iWantATip: boolean;
+}
+
+class ExampleKurtosisLambdaResult {
+    readonly tip: string
+
+    constructor(tip: string) {
+        this.tip = tip;
+    }
+}
+
+export class ExampleKurtosisLambda implements KurtosisLambda {
     constructor() {}
-}
 
-class ExampleKurtosisLambdaParams {
-    readonly iWantATip: boolean;
-}
+    async execute(networkCtx: NetworkContext, serializedParams: string): Promise<Result<string, Error>> {
+        log.info("Example Kurtosis Lambda receives serializedParams '" + serializedParams + "'");
+        let params: ExampleKurtosisLambdaParams;
+        try {
+            params = JSON.parse(serializedParams)
+        } catch (e: any) {
+            // Sadly, we have to do this because there's no great way to enforce the caught thing being an error
+            // See: https://stackoverflow.com/questions/30469261/checking-for-typeof-error-in-js
+            if (e && e.stack && e.message) {
+                return err(e as Error);
+            }
+            return err(new Error("Parsing params string '" + serializedParams + "' threw an exception, but " +
+                "it's not an Error so we can't report any more information than this"));
+        }
 
+        const exampleKurtosisLambdaResult: ExampleKurtosisLambdaResult = new ExampleKurtosisLambdaResult(
+            ExampleKurtosisLambda.getRandomTip(params.iWantATip)
+        );
 
-/*
+        let stringResult;
+        try {
+            stringResult = JSON.stringify(exampleKurtosisLambdaResult);
+        } catch (e: any) {
+            // Sadly, we have to do this because there's no great way to enforce the caught thing being an error
+            // See: https://stackoverflow.com/questions/30469261/checking-for-typeof-error-in-js
+            if (e && e.stack && e.message) {
+                return err(e as Error);
+            }
+            return err(new Error("An error occurred serializing the Kurtosis Lambda result threw an exception, but " +
+                "it's not an Error so we can't report any more information than this"));
+        }
 
-type ExampleKurtosisLambdaResult struct {
-    Tip string `json:"tip"`
-}
-
-func NewExampleKurtosisLambda() *ExampleKurtosisLambda {
-    return &ExampleKurtosisLambda{}
-}
-
-func (e ExampleKurtosisLambda) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
-    logrus.Infof("Example Kurtosis Lambda receives serializedParams '%v'", serializedParams)
-    serializedParamsBytes := []byte(serializedParams)
-    var params ExampleKurtosisLambdaParams
-    if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
-        return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Kurtosis Lambda serialized params with value '%v'", serializedParams)
+        log.info("Example Kurtosis Lambda executed successfully")
+        return ok(stringResult);
     }
 
-    exampleKurtosisLambdaResult := &ExampleKurtosisLambdaResult{
-        Tip: getRandomTip(params.IWantATip),
+    private static getRandomTip(shouldGiveAdvice: boolean): string {
+        let tip: string;
+        if (shouldGiveAdvice) {
+            // This gives a random number between [0, length)
+            tip = TIPS_REPOSITORY[Math.floor(Math.random() * TIPS_REPOSITORY.length)];
+        } else {
+            tip = "Kurtosis Lambda Example won't enlighten you today."
+        }
+        return tip
     }
-
-    result, err := json.Marshal(exampleKurtosisLambdaResult)
-    if err != nil {
-        return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
-    }
-    stringResult := string(result)
-
-    logrus.Info("Example Kurtosis Lambda executed successfully")
-    return stringResult, nil
 }
-
-func getRandomTip(shouldGiveAdvice bool) string {
-    var tip string
-    if shouldGiveAdvice {
-        rand.Seed(time.Now().Unix())
-        tip = tipsRepository[rand.Intn(len(tipsRepository))]
-    } else {
-        tip = "Kurtosis Lambda Example won't enlighten you today."
-    }
-    return tip
-}
-*/

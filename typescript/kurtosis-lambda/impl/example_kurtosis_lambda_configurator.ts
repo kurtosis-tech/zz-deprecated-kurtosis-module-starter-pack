@@ -1,6 +1,7 @@
 import { KurtosisLambda, KurtosisLambdaConfigurator } from 'kurtosis-lambda-api-lib';
 import { Result, err, ok } from 'neverthrow';
 import * as log from 'loglevel';
+import { ExampleKurtosisLambda } from './example_kurtosis_lambda';
 
 const DEFAULT_LOG_LEVEL: string = "info";
 
@@ -8,6 +9,9 @@ type LoglevelAcceptableLevelStrs = log.LogLevelDesc
 
 export class ExampleKurtosisLambdaConfigurator implements KurtosisLambdaConfigurator {
     public parseParamsAndCreateKurtosisLambda(serializedCustomParamsStr: string): Result<KurtosisLambda, Error> {
+        // TODO DEBUGGING
+        console.log("Parsing params and doing a thing!");
+
         let args: ExampleKurtosisLambdaArgs;
         try {
             args = JSON.parse(serializedCustomParamsStr);
@@ -21,10 +25,18 @@ export class ExampleKurtosisLambdaConfigurator implements KurtosisLambdaConfigur
                 "it's not an Error so we can't report any more information than this"));
         }
 
-        const setLogLevelResult: Result<null, Error> = ExampleKurtosisLambdaConfigurator.setLogLevel(args.getLogLevel())
+        // TODO DEbugging
+        console.log("Args:");
+        console.log(args);
+
+        const setLogLevelResult: Result<null, Error> = ExampleKurtosisLambdaConfigurator.setLogLevel(args.logLevel)
         if (setLogLevelResult.isErr()) {
+            console.log("Error in setting the log level")
             return err(setLogLevelResult.error);
         }
+
+        // TODO DEBUGGING
+        console.log("After setting the log level")
 
         const lambda: KurtosisLambda = new ExampleKurtosisLambda();
         return ok(lambda);

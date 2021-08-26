@@ -13,9 +13,13 @@ const lambdaExecutor: KurtosisLambdaExecutor = new KurtosisLambdaExecutor(config
 lambdaExecutor.run().then(runLambdaResult => {
     let exitCode: number = SUCCESS_EXIT_CODE;
     if (runLambdaResult.isErr()) {
-        log.error("An error occurred running the Kurtosis Lambda executor:")
+        console.log("A non-exception error occurred running the Kurtosis Lambda executor:");
         console.log(runLambdaResult.error);
         exitCode = FAILURE_EXIT_CODE;
     }
     process.exit(exitCode);
-})
+}).catch(reason => {
+    console.log("An uncaught exception occurred running the Kurtosis Lambda executor:");
+    console.log(reason);
+    process.exit(FAILURE_EXIT_CODE);
+});
