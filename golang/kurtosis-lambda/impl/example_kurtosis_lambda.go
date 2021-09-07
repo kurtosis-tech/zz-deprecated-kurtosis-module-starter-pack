@@ -26,7 +26,7 @@ type ExampleKurtosisLambda struct {
 }
 
 type ExampleKurtosisLambdaParams struct {
-	IWantATip bool `json:"i_want_a_tip"`
+	IWantATip bool `json:"iWantATip"`
 }
 
 type ExampleKurtosisLambdaResult struct {

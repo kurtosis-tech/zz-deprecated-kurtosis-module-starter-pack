@@ -12,6 +12,7 @@ root_dirpath="$(dirname "${script_dirpath}")"
 #                                             Constants
 # ==================================================================================================
 RELEASE_SCRIPT_FILENAME="release-repo.sh"     # NOTE: Must be on the path; comes from devtools repo
+UPDATE_PACKAGE_VERSIONS_SCRIPT_FILENAME="update-package-versions.sh"
 
 
 # ==================================================================================================

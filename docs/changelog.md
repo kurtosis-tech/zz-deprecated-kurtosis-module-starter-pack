@@ -1,5 +1,15 @@
 # TBD
 
+# 0.1.3
+### Changes
+* Switch to using productized docs-checker orb
+
+### Features
+* Added Typescript
+
+### Fixes
+* Added error-checking in `validate-all-bootstraps` to ensure that custom bootstrap params are defined for all supported languages
+
 # 0.1.2
 ### Features
 * Added the Unlicense, dedicating this to the public domain

@@ -6,7 +6,7 @@ root_dirpath="$(dirname "${script_dirpath}")"
 # ==================================================================================================
 #                                             Constants
 # ==================================================================================================
-IMAGE_NAME="kurtosistech/golang-example-lambda"
+IMAGE_NAME="kurtosistech/typescript-example-lambda"
 LAMBDA_DIRNAME="kurtosis-lambda"
 
 # =============================================================================

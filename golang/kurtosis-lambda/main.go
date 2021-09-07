@@ -22,7 +22,7 @@ func main() {
 
 	lambdaExecutor := execution.NewKurtosisLambdaExecutor(configurator)
 	if err := lambdaExecutor.Run(); err != nil {
-		logrus.Errorf("An error occurred running the kurtosis-lambda executor:")
+		logrus.Errorf("An error occurred running the Kurtosis Lambda executor:")
 		fmt.Fprintln(logrus.StandardLogger().Out, err)
 		os.Exit(failureExitCode)
 	}
