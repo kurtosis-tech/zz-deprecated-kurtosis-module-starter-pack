@@ -18,7 +18,7 @@ UPDATE_PACKAGE_VERSIONS_SCRIPT_FILENAME="update-package-versions.sh"
 # ==================================================================================================
 #                                             Main Logic
 # ==================================================================================================
-if ! bash "${RELEASE_SCRIPT_FILENAME}" "${root_dirpath}" "${script_dirpath}/${UPDATE_PACKAGE_VERSIONS_SCRIPT_FILENAME}"; then
+if ! bash "${RELEASE_SCRIPT_FILENAME}" "${root_dirpath}"; then
     echo "Error: Couldn't cut the release" >&2
     exit 1
 fi
