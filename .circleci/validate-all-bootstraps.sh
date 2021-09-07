@@ -14,11 +14,14 @@ BUILD_SCRIPT_FILENAME="build.sh"
 GIT_USER_EMAIL_PROPERTY="user.email"
 GIT_USER_NAME_PROPERTY="user.name"
 
+NO_CUSTOM_BOOSTRAP_FLAGS_KEY="NONE"
+
 # Bootstrapping normally requires input from STDIN, but we can set
 #  certain variables so this isn't required for CI
 # NOTE: This won't handle flag values that contain spaces, though it can handle multiple flags separated by a space
 declare -A CUSTOM_LANG_BOOTSTRAP_FLAGS 
 CUSTOM_LANG_BOOTSTRAP_FLAGS[golang]="GO_NEW_MODULE_NAME=github.com/test/test-module"
+CUSTOM_LANG_BOOTSTRAP_FLAGS[typescript]="${NO_CUSTOM_BOOSTRAP_FLAGS_KEY}"  # No extra Typescript bootstrapping flags needed
 
 
 
@@ -68,7 +71,14 @@ for lang in $(cat "${root_dirpath}/${SUPPORTED_LANGS_FILENAME}"); do
     echo "Bootstrapping and running ${lang} Kurtosis Lambda..."
     output_dirpath="$(mktemp -d)"
     kurtosis_lambda_image="bootstrap-kurtosis-lambda-${lang}-image"
-    lang_specific_vars_to_set="${CUSTOM_LANG_BOOTSTRAP_FLAGS[${lang}]}"
+    lang_specific_vars_to_set="${CUSTOM_LANG_BOOTSTRAP_FLAGS[${lang}]:-}"
+    if [ -z "${lang_specific_vars_to_set}" ]; then
+        echo "Error: Custom bootstrap flas must be defined for ${lang} in this script; to indicate there are no custom bootstrap flags, set the value to '${NO_CUSTOM_BOOSTRAP_FLAGS_KEY}'" >&2
+        exit 1
+    fi
+    if [ "${lang_specific_vars_to_set}" == "${NO_CUSTOM_BOOSTRAP_FLAGS_KEY}" ]; then
+        lang_specific_vars_to_set=""
+    fi
     command="${lang_specific_vars_to_set} ${bootstrap_script_filepath} ${lang} ${output_dirpath} ${kurtosis_lambda_image}"
     if ! eval "${command}"; then
         echo "Error: Bootstrapping ${lang} Kurtosis Lambda failed" >&2
