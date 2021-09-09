@@ -1,10 +1,16 @@
 # TBD
+### Changes
+* Bootstrapping no longer builds the Lambda, to reduce the amount of text thrown at the user (but we instruct the user to do so after bootstrapping)
+
 ### Features
 * Bootstrapping automatically copies over Git & Docker ignore files
 * Copy Kurtosis Lambda static-files folder into the Docker image
 
-### Changes
-* Bootstrapping no longer builds the Lambda, to reduce the amount of text thrown at the user (but we instruct the user to do so after bootstrapping)
+### Fixes
+* Upgrade to Kurt Client 0.15.0, which fixes a typo with a method name in ContainerRunConfigBuilder
+
+### Breaking Changes
+* Upgrade to Kurt Client 0.15.0 (see break remediation [here](https://github.com/kurtosis-tech/kurtosis-client/blob/develop/docs/changelog.md))
 
 # 0.1.3
 ### Changes
