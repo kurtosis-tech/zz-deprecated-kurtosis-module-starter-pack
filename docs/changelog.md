@@ -1,4 +1,9 @@
 # TBD
+### Features
+* Bootstrapping automatically copies over Git & Docker ignore files
+
+### Changes
+* Bootstrapping no longer builds the Lambda, to reduce the amount of text thrown at the user (but we instruct the user to do so after bootstrapping)
 
 # 0.1.3
 ### Changes

@@ -31,6 +31,9 @@ SCRIPTS_DIRNAME="scripts"
 # Instead, we add this suffix and delete the backup files after
 SED_INPLACE_FILE_SUFFIX=".sedreplace"
 
+GITIGNORE_FILENAME=".gitignore"
+DOCKERIGNORE_FILENAME=".dockerignore"
+
 # =============================================================================
 #                             Pre-Arg Parsing
 # =============================================================================
@@ -107,12 +110,35 @@ fi
 # =============================================================================
 #                                 Main Code
 # =============================================================================
-# Use language-specific prep script to populate contents of output directory
 if ! mkdir -p "${output_dirpath}"; then
   echo "Error: Could not create output directory '${output_dirpath}'" >&2
   exit 1
 fi
 lang_dirpath="${repo_root_dirpath}/${lang}"
+
+# Copy .gitignore file
+gitignore_filepath="${lang_dirpath}/${GITIGNORE_FILENAME}"
+if ! [ -f "${gitignore_filepath}" ]; then
+    echo "Error: No ${GITIGNORE_FILENAME} file exists at '${gitignore_filepath}'; this is a bug in this repo" >&2
+    exit 1
+fi
+if ! cp "${gitignore_filepath}" "${output_dirpath}/"; then
+    echo "Error: Couldn't copy ${GITIGNORE_FILENAME} file from '${gitignore_filepath}' to output directory '${output_dirpath}'" >&2
+    exit 1
+fi
+
+# Copy .dockerignore file
+dockerignore_filepath="${lang_dirpath}/${DOCKERIGNORE_FILENAME}"
+if ! [ -f "${dockerignore_filepath}" ]; then
+    echo "Error: No ${DOCKERIGNORE_FILENAME} file exists at '${dockerignore_filepath}'; this is a bug in this repo" >&2
+    exit 1
+fi
+if ! cp "${dockerignore_filepath}" "${output_dirpath}/"; then
+    echo "Error: Couldn't copy ${DOCKERIGNORE_FILENAME} file from '${dockerignore_filepath}' to output directory '${output_dirpath}'" >&2
+    exit 1
+fi
+
+# Use language-specific prep script to populate contents of output directory
 lang_bootstrap_dirpath="${script_dirpath}/${lang}"
 prep_new_repo_script_filepath="${lang_bootstrap_dirpath}/${PREP_NEW_REPO_FILENAME}"
 if ! bash "${prep_new_repo_script_filepath}" "${lang_dirpath}" "${output_dirpath}" "${lambda_image}"; then
@@ -184,9 +210,6 @@ if ! git commit -m "Initial commit" > /dev/null; then
 fi
 
 #Runs build script
-scripts_dirpath="${output_dirpath}/${SCRIPTS_DIRNAME}"
-bash "${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}"
-
 echo "Bootstrap successful!"
-echo "To build the Lambda, run '${scripts_dirpath}/${BUILD_SCRIPT_FILENAME}'"
+echo "To build the Lambda, run: ${output_dirpath}/${SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
 echo "To customize your Lambda, follow the steps in '${output_readme_filepath}'"
