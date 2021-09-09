@@ -1,6 +1,7 @@
 # TBD
 ### Features
 * Bootstrapping automatically copies over Git & Docker ignore files
+* Copy Kurtosis Lambda static-files folder into the Docker image
 
 ### Changes
 * Bootstrapping no longer builds the Lambda, to reduce the amount of text thrown at the user (but we instruct the user to do so after bootstrapping)
