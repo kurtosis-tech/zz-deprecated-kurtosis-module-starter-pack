@@ -1,4 +1,6 @@
 # TBD
+
+# 0.1.4
 ### Changes
 * Bootstrapping no longer builds the Lambda, to reduce the amount of text thrown at the user (but we instruct the user to do so after bootstrapping)
 
