@@ -45,7 +45,6 @@ fi
 # ==================================================================================================
 #                                             Main Logic
 # ==================================================================================================
-cp "${input_dirpath}/.dockerignore" "${output_dirpath}/"
 cp "${input_dirpath}/package.json" "${output_dirpath}/"
 cp "${input_dirpath}/tsconfig.json" "${output_dirpath}/"
 cp "${input_dirpath}/yarn.lock" "${output_dirpath}/"
