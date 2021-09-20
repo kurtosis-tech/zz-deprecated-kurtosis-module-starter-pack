@@ -13,7 +13,14 @@ Prerequisites:
 * `docker` installed on your machine
 
 Quickstart steps:
-1. Clone this repo's `master` branch: `git clone --single-branch --branch master git@github.com:kurtosis-tech/kurtosis-lambda-starter-pack.git`
+1. Clone this repo's `master` branch (hover the code block to copy):
+    ```
+    git clone --single-branch --branch master git@github.com:kurtosis-tech/kurtosis-lambda-starter-pack.git
+    ```
 1. View [the supported languages](https://github.com/kurtosis-tech/kurtosis-lambda-starter-pack/blob/master/supported-languages.txt) and choose the language you'd like your Kurtosis Lambda in
-1. Run `bootstrap/bootstrap.sh` and follow the helptext instructions to fill in the script arguments and bootstrap your repo
+1. Run the bootstrap script and follow the helptext instructions:
+    ```
+    bootstrap/bootstrap.sh
+    ```
+
    

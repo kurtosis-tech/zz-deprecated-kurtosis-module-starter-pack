@@ -1,4 +1,6 @@
 # TBD
+### Fixes
+* Make README codeblocks copy-pasteable in Github
 
 # 0.1.4
 ### Changes
