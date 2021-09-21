@@ -1,5 +1,6 @@
 # TBD
 ### Fixes
+* Make README codeblocks copy-pasteable in Github
 * Pin the Typescript Node base image version to `14.17.6-alpine3.14` so that it's not constantly updating underneath the user
 
 # 0.1.4
