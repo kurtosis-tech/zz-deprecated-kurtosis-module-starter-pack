@@ -3,6 +3,9 @@
 * Make README codeblocks copy-pasteable in Github
 * Pin the Typescript Node base image version to `14.17.6-alpine3.14` so that it's not constantly updating underneath the user
 
+### Changes
+* Use `lambda-api-lib` 0.9.0, which returns log output strings rather than bytes for `ServiceContext.execCommand`
+
 # 0.1.4
 ### Changes
 * Bootstrapping no longer builds the Lambda, to reduce the amount of text thrown at the user (but we instruct the user to do so after bootstrapping)
