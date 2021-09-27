@@ -2,6 +2,7 @@
 ### Fixes
 * Fixed an issue where the Docker image would get rebuilt on Vim swapfile changes
 
+# 0.1.6
 ### Features
 * Upgraded Kurt Lamba API Lib dependency to the latest version [Kurt Lambda API Lib 0.9.1](https://github.com/kurtosis-tech/kurtosis-lambda-api-lib/blob/develop/docs/changelog.md#091)
 
