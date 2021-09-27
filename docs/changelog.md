@@ -1,4 +1,6 @@
 # TBD
+### Fixes
+* Fixed an issue where the Docker image would get rebuilt on Vim swapfile changes
 
 # 0.1.6
 ### Features
