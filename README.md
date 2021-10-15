@@ -15,7 +15,7 @@ Prerequisites:
 Quickstart steps:
 1. Clone this repo's `master` branch (hover the code block to copy):
     ```
-    git clone --single-branch --branch master git@github.com:kurtosis-tech/kurtosis-lambda-starter-pack.git
+    git clone --single-branch --branch master git@github.com:kurtosis-tech/kurtosis-module-starter-pack.git
     ```
 1. Run the bootstrap script and follow the helptext instructions:
     ```

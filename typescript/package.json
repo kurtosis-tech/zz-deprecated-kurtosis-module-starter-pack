@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "ts-mocha -p tsconfig.json 'kurtosis-lambda/test/**/*.ts' && tsc"
+        "build": "ts-mocha -p tsconfig.json 'kurtosis-module/test/**/*.ts' && tsc"
     },
     "files": [
         "build"
