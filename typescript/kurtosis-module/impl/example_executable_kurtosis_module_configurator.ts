@@ -1,18 +1,19 @@
-import { KurtosisLambda, KurtosisLambdaConfigurator } from 'kurtosis-lambda-api-lib';
 import { Result, err, ok } from 'neverthrow';
 import * as log from 'loglevel';
-import { ExampleKurtosisLambda } from './example_kurtosis_lambda';
+import { ExampleExecutableKurtosisModule } from './example_executable_kurtosis_module';
+import { ExecutableKurtosisModule, KurtosisModuleConfigurator } from 'kurtosis-module-api-lib';
 
 const DEFAULT_LOG_LEVEL: string = "info";
 
+interface ExampleExecutableKurtosisModuleArgs {
+    logLevel: string;
+}
+
 type LoglevelAcceptableLevelStrs = log.LogLevelDesc
 
-export class ExampleKurtosisLambdaConfigurator implements KurtosisLambdaConfigurator {
-    public parseParamsAndCreateKurtosisLambda(serializedCustomParamsStr: string): Result<KurtosisLambda, Error> {
-        // TODO DEBUGGING
-        console.log("Parsing params and doing a thing!");
-
-        let args: ExampleKurtosisLambdaArgs;
+export class ExampleExecutableKurtosisModuleConfigurator implements KurtosisModuleConfigurator {
+    public parseParamsAndCreateExecutableModule(serializedCustomParamsStr: string): Result<ExecutableKurtosisModule, Error> {
+        let args: ExampleExecutableKurtosisModuleArgs;
         try {
             args = JSON.parse(serializedCustomParamsStr);
         } catch (e: any) {
@@ -25,20 +26,13 @@ export class ExampleKurtosisLambdaConfigurator implements KurtosisLambdaConfigur
                 "it's not an Error so we can't report any more information than this"));
         }
 
-        // TODO DEbugging
-        console.log("Args:");
-        console.log(args);
-
-        const setLogLevelResult: Result<null, Error> = ExampleKurtosisLambdaConfigurator.setLogLevel(args.logLevel)
+        const setLogLevelResult: Result<null, Error> = ExampleExecutableKurtosisModuleConfigurator.setLogLevel(args.logLevel)
         if (setLogLevelResult.isErr()) {
             console.log("Error in setting the log level")
             return err(setLogLevelResult.error);
         }
 
-        // TODO DEBUGGING
-        console.log("After setting the log level")
-
-        const lambda: KurtosisLambda = new ExampleKurtosisLambda();
+        const lambda: ExampleExecutableKurtosisModule = new ExampleExecutableKurtosisModule();
         return ok(lambda);
     }
 

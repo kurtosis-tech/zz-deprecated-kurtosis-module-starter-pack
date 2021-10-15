@@ -11,7 +11,7 @@ RUN yarn install
 COPY . .
 
 # Copy local static files inside the Kurtosis Lambda image
-COPY kurtosis-lambda/static_files /static-files
+COPY kurtosis-module/static_files /static-files
 
 RUN yarn build
 
