@@ -10,11 +10,11 @@ const configurator: KurtosisModuleConfigurator = new ExampleExecutableKurtosisMo
 // >>>>>>>>>>>>>>>>>>> REPLACE WITH YOUR OWN CONFIGURATOR <<<<<<<<<<<<<<<<<<<<<<<<
 
 const executor: KurtosisModuleExecutor = new KurtosisModuleExecutor(configurator)
-executor.run().then(runLambdaResult => {
+executor.run().then(runModuleResult => {
     let exitCode: number = SUCCESS_EXIT_CODE;
-    if (runLambdaResult.isErr()) {
+    if (runModuleResult.isErr()) {
         console.log("A non-exception error occurred running the Kurtosis module executor:");
-        console.log(runLambdaResult.error);
+        console.log(runModuleResult.error);
         exitCode = FAILURE_EXIT_CODE;
     }
     process.exit(exitCode);

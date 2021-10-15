@@ -32,8 +32,8 @@ export class ExampleExecutableKurtosisModuleConfigurator implements KurtosisModu
             return err(setLogLevelResult.error);
         }
 
-        const lambda: ExampleExecutableKurtosisModule = new ExampleExecutableKurtosisModule();
-        return ok(lambda);
+        const module: ExampleExecutableKurtosisModule = new ExampleExecutableKurtosisModule();
+        return ok(module);
     }
 
     private static setLogLevel(logLevelStr: string): Result<null, Error> {
