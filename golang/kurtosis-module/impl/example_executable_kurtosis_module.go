@@ -22,40 +22,40 @@ var (
 	}
 )
 
-type ExampleKurtosisLambda struct {
+type ExampleExecutableKurtosisModule struct {
 }
 
-type ExampleKurtosisLambdaParams struct {
+type ExampleExecutableKurtosisModuleParams struct {
 	IWantATip bool `json:"iWantATip"`
 }
 
-type ExampleKurtosisLambdaResult struct {
+type ExampleExecutableKurtosisModuleResult struct {
 	Tip string `json:"tip"`
 }
 
-func NewExampleKurtosisLambda() *ExampleKurtosisLambda {
-	return &ExampleKurtosisLambda{}
+func NewExampleExecutableKurtosisModule() *ExampleExecutableKurtosisModule {
+	return &ExampleExecutableKurtosisModule{}
 }
 
-func (e ExampleKurtosisLambda) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
-	logrus.Infof("Example Kurtosis Lambda receives serializedParams '%v'", serializedParams)
+func (e ExampleExecutableKurtosisModule) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
+	logrus.Infof("Received serialized execute params '%v'", serializedParams)
 	serializedParamsBytes := []byte(serializedParams)
-	var params ExampleKurtosisLambdaParams
+	var params ExampleExecutableKurtosisModuleParams
 	if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Kurtosis Lambda serialized params with value '%v'", serializedParams)
+		return "", stacktrace.Propagate(err, "An error occurred deserializing the serialized execute params string '%v'", serializedParams)
 	}
 
-	exampleKurtosisLambdaResult := &ExampleKurtosisLambdaResult{
+	resultObj := &ExampleExecutableKurtosisModuleResult{
 		Tip: getRandomTip(params.IWantATip),
 	}
 
-	result, err := json.Marshal(exampleKurtosisLambdaResult)
+	result, err := json.Marshal(resultObj)
 	if err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
+		return "", stacktrace.Propagate(err, "An error occurred serializing the result object '%+v'", resultObj)
 	}
 	stringResult := string(result)
 
-	logrus.Info("Example Kurtosis Lambda executed successfully")
+	logrus.Info("Execution successful")
 	return stringResult, nil
 }
 
@@ -65,7 +65,7 @@ func getRandomTip(shouldGiveAdvice bool) string {
 		rand.Seed(time.Now().Unix())
 		tip = tipsRepository[rand.Intn(len(tipsRepository))]
 	} else {
-		tip = "Kurtosis Lambda Example won't enlighten you today."
+		tip = "The module won't enlighten you today."
 	}
 	return tip
 }
