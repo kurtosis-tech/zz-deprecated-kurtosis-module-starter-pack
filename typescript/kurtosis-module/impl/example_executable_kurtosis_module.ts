@@ -14,11 +14,13 @@ const TIPS_REPOSITORY: string[] = [
     "If you sleep until lunch time, you can save the breakfast money.",
 ];
 
-interface ExampleExecutableKurtosisModuleParams {
+// Parameters that the execute command accepts, serialized as JSON
+interface ExecuteParams {
     iWantATip: boolean;
 }
 
-class ExampleExecutableKurtosisModuleResult {
+// Result that the execute command returns, serialized as JSON
+class ExecuteResult {
     readonly tip: string
 
     constructor(tip: string) {
@@ -31,7 +33,7 @@ export class ExampleExecutableKurtosisModule implements ExecutableKurtosisModule
 
     async execute(networkCtx: NetworkContext, serializedParams: string): Promise<Result<string, Error>> {
         log.info("Received serialized execute params  '" + serializedParams + "'");
-        let params: ExampleExecutableKurtosisModuleParams;
+        let params: ExecuteParams;
         try {
             params = JSON.parse(serializedParams)
         } catch (e: any) {
@@ -44,7 +46,7 @@ export class ExampleExecutableKurtosisModule implements ExecutableKurtosisModule
                 "it's not an Error so we can't report any more information than this"));
         }
 
-        const resultObj: ExampleExecutableKurtosisModuleResult = new ExampleExecutableKurtosisModuleResult(
+        const resultObj: ExecuteResult = new ExecuteResult(
             ExampleExecutableKurtosisModule.getRandomTip(params.iWantATip)
         );
 

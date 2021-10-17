@@ -22,15 +22,17 @@ var (
 	}
 )
 
-type ExampleExecutableKurtosisModule struct {
-}
-
-type ExampleExecutableKurtosisModuleParams struct {
+// Parameters that the execute command accepts, serialized as JSON
+type ExecuteParams struct {
 	IWantATip bool `json:"iWantATip"`
 }
 
-type ExampleExecutableKurtosisModuleResult struct {
+// Result that the execute command returns, serialized as JSON
+type ExecuteResult struct {
 	Tip string `json:"tip"`
+}
+
+type ExampleExecutableKurtosisModule struct {
 }
 
 func NewExampleExecutableKurtosisModule() *ExampleExecutableKurtosisModule {
@@ -40,12 +42,12 @@ func NewExampleExecutableKurtosisModule() *ExampleExecutableKurtosisModule {
 func (e ExampleExecutableKurtosisModule) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
 	logrus.Infof("Received serialized execute params '%v'", serializedParams)
 	serializedParamsBytes := []byte(serializedParams)
-	var params ExampleExecutableKurtosisModuleParams
+	var params ExecuteParams
 	if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
 		return "", stacktrace.Propagate(err, "An error occurred deserializing the serialized execute params string '%v'", serializedParams)
 	}
 
-	resultObj := &ExampleExecutableKurtosisModuleResult{
+	resultObj := &ExecuteResult{
 		Tip: getRandomTip(params.IWantATip),
 	}
 
