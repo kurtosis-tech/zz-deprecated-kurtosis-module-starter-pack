@@ -1,4 +1,6 @@
 # TBD
+### Fixes
+* Correct small bit of out-of-place code in the Golang example
 
 # 0.2.0
 ### Changes

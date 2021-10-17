@@ -11,7 +11,8 @@ const(
 	defaultLogLevel = "info"
 )
 
-type ExampleExecutableKurtosisModuleArgs struct {
+// Parameters that the module accepts when loaded, serializeda as JSON
+type LoadModuleParams struct {
 	// Indicates the log level for this Kurtosis module implementation
 	LogLevel string `json:"logLevel"`
 }
@@ -24,7 +25,7 @@ func NewExampleExecutableKurtosisModuleConfigurator() *ExampleExecutableKurtosis
 
 func (t ExampleExecutableKurtosisModuleConfigurator) ParseParamsAndCreateExecutableModule(serializedCustomParamsStr string) (kurtosis_modules.ExecutableKurtosisModule, error) {
 	serializedCustomParamsBytes := []byte(serializedCustomParamsStr)
-	var args ExampleExecutableKurtosisModuleArgs
+	var args LoadModuleParams
 	if err := json.Unmarshal(serializedCustomParamsBytes, &args); err != nil {
 		return nil, stacktrace.Propagate(err, "An error occurred deserializing the Kurtosis module serialized custom params with value '%v", serializedCustomParamsStr)
 	}
