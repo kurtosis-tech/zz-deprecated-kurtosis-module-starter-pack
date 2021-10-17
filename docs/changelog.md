@@ -1,5 +1,12 @@
 # TBD
 
+# 0.2.0
+### Changes
+* Upgraded to [Module API Lib 0.10.0](https://github.com/kurtosis-tech/kurtosis-module-api-lib/blob/develop/docs/changelog.md#0100), which replaces all "Lambda" references with "module"
+
+### Breaking Changes
+* Significant renames to change all references of "Lambda" to "module"
+
 # 0.1.7
 ### Fixes
 * Fixed an issue where the Docker image would get rebuilt on Vim swapfile changes

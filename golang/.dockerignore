@@ -12,4 +12,4 @@ LICENSE
 *.md
 
 scripts
-kurtosis-lambda/Dockerfile
+kurtosis-module/Dockerfile

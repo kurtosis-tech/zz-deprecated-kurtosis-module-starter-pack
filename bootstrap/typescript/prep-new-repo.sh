@@ -9,7 +9,7 @@ script_dirpath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # ==================================================================================================
 #                                             Constants
 # ==================================================================================================
-LAMBDA_IMPL_DIRNAME="kurtosis-lambda"
+MODULE_DIRNAME="kurtosis-module"
 SCRIPTS_DIRNAME="scripts"
 
 # ==================================================================================================
@@ -48,5 +48,5 @@ fi
 cp "${input_dirpath}/package.json" "${output_dirpath}/"
 cp "${input_dirpath}/tsconfig.json" "${output_dirpath}/"
 cp "${input_dirpath}/yarn.lock" "${output_dirpath}/"
-cp -r "${input_dirpath}/${LAMBDA_IMPL_DIRNAME}" "${output_dirpath}/"
+cp -r "${input_dirpath}/${MODULE_DIRNAME}" "${output_dirpath}/"
 cp -r "${input_dirpath}/${SCRIPTS_DIRNAME}" "${output_dirpath}/"

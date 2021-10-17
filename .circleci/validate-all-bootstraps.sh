@@ -8,7 +8,7 @@ root_dirpath="$(dirname "${script_dirpath}")"
 BOOTSTRAP_SCRIPTS_DIRNAME="bootstrap"
 BOOTSTRAP_SCRIPT_FILENAME="bootstrap.sh"
 SUPPORTED_LANGS_FILENAME="supported-languages.txt"
-SCRIPTS_DIRNAME_INSIDE_KURTOSIS_LAMBDA="scripts"
+SCRIPTS_DIRNAME_INSIDE_KURTOSIS_MODULE="scripts"
 BUILD_SCRIPT_FILENAME="build.sh"
 
 GIT_USER_EMAIL_PROPERTY="user.email"
@@ -66,11 +66,11 @@ if ! { git config --list | grep "${GIT_USER_EMAIL_PROPERTY}"; } || ! { git confi
 fi
 
 bootstrap_script_filepath="${root_dirpath}/${BOOTSTRAP_SCRIPTS_DIRNAME}/${BOOTSTRAP_SCRIPT_FILENAME}"
-echo "Bootstrapping and running new Kurtosis Lambda for all languages..."
+echo "Bootstrapping and running new Kurtosis modules for all languages..."
 for lang in $(cat "${root_dirpath}/${SUPPORTED_LANGS_FILENAME}"); do
-    echo "Bootstrapping and running ${lang} Kurtosis Lambda..."
+    echo "Bootstrapping and running ${lang} Kurtosis module..."
     output_dirpath="$(mktemp -d)"
-    kurtosis_lambda_image="bootstrap-kurtosis-lambda-${lang}-image"
+    kurtosis_module_image="bootstrap-kurtosis-module-${lang}-image"
     lang_specific_vars_to_set="${CUSTOM_LANG_BOOTSTRAP_FLAGS[${lang}]:-}"
     if [ -z "${lang_specific_vars_to_set}" ]; then
         echo "Error: Custom bootstrap flas must be defined for ${lang} in this script; to indicate there are no custom bootstrap flags, set the value to '${NO_CUSTOM_BOOSTRAP_FLAGS_KEY}'" >&2
@@ -79,17 +79,17 @@ for lang in $(cat "${root_dirpath}/${SUPPORTED_LANGS_FILENAME}"); do
     if [ "${lang_specific_vars_to_set}" == "${NO_CUSTOM_BOOSTRAP_FLAGS_KEY}" ]; then
         lang_specific_vars_to_set=""
     fi
-    command="${lang_specific_vars_to_set} ${bootstrap_script_filepath} ${lang} ${output_dirpath} ${kurtosis_lambda_image}"
+    command="${lang_specific_vars_to_set} ${bootstrap_script_filepath} ${lang} ${output_dirpath} ${kurtosis_module_image}"
     if ! eval "${command}"; then
-        echo "Error: Bootstrapping ${lang} Kurtosis Lambda failed" >&2
+        echo "Error: Bootstrapping ${lang} Kurtosis module failed" >&2
         exit 1
     fi
 
-    build_filepath="${output_dirpath}/${SCRIPTS_DIRNAME_INSIDE_KURTOSIS_LAMBDA}/${BUILD_SCRIPT_FILENAME}"
+    build_filepath="${output_dirpath}/${SCRIPTS_DIRNAME_INSIDE_KURTOSIS_MODULE}/${BUILD_SCRIPT_FILENAME}"
     if ! "${build_filepath}"; then
-        echo "Error: The build of the bootstrapped ${lang} Kurtosis Lambda failed" >&2
+        echo "Error: The build of the bootstrapped ${lang} Kurtosis module failed" >&2
         exit 1
     fi
-    echo "Successfully bootstrapped and built new ${lang} Kurtosis Lambda"
+    echo "Successfully bootstrapped and built new ${lang} Kurtosis module"
 done
-echo "Successfully bootstrapped and ran new Kurtosis Lambdas for all languages!"
+echo "Successfully bootstrapped and ran new Kurtosis modules for all languages!"

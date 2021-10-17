@@ -6,6 +6,6 @@
         "strict": true
     },
     "include": [
-        "kurtosis-lambda/**/*"
+        "kurtosis-module/**/*"
     ]
 }
