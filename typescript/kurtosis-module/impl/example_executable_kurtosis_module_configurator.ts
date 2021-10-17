@@ -5,7 +5,8 @@ import { ExecutableKurtosisModule, KurtosisModuleConfigurator } from 'kurtosis-m
 
 const DEFAULT_LOG_LEVEL: string = "info";
 
-interface ExampleExecutableKurtosisModuleArgs {
+// Parameters that the module accepts when loaded, serializeda as JSON
+interface LoadModuleParams {
     logLevel: string;
 }
 
@@ -13,7 +14,7 @@ type LoglevelAcceptableLevelStrs = log.LogLevelDesc
 
 export class ExampleExecutableKurtosisModuleConfigurator implements KurtosisModuleConfigurator {
     public parseParamsAndCreateExecutableModule(serializedCustomParamsStr: string): Result<ExecutableKurtosisModule, Error> {
-        let args: ExampleExecutableKurtosisModuleArgs;
+        let args: LoadModuleParams;
         try {
             args = JSON.parse(serializedCustomParamsStr);
         } catch (e: any) {
