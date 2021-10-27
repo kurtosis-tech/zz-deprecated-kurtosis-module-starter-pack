@@ -13,8 +13,7 @@ FROM base AS build
 
 RUN apk add --no-cache yarn
 
-# install node packages
-# RUN npm set progress=false && npm config set depth 0
+# Install production packages
 RUN yarn install --frozen-lockfile --production=true
 
 # Use node-prune to further reduce unnecessary files: https://github.com/tj/node-prune
@@ -23,11 +22,12 @@ RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 # Set aside these production dependencies for use later
 RUN cp -R node_modules prod_node_modules
 
-# Install ALL node_modules, including 'devDependencies'
+# Now install ALL node_modules, including 'devDependencies'
 RUN yarn install --frozen-lockfile
 
 COPY . .
 
+# Run tests & compile
 RUN yarn build
 
 #
