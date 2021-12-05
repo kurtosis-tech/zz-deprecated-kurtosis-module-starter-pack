@@ -2,8 +2,8 @@ package impl
 
 import (
 	"encoding/json"
-	"github.com/kurtosis-tech/kurtosis-client/golang/lib/networks"
-	"github.com/palantir/stacktrace"
+	"github.com/kurtosis-tech/kurtosis-core-api-lib/api/golang/lib/enclaves"
+	"github.com/kurtosis-tech/stacktrace"
 	"github.com/sirupsen/logrus"
 	"math/rand"
 	"time"
@@ -39,7 +39,7 @@ func NewExampleExecutableKurtosisModule() *ExampleExecutableKurtosisModule {
 	return &ExampleExecutableKurtosisModule{}
 }
 
-func (e ExampleExecutableKurtosisModule) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
+func (e ExampleExecutableKurtosisModule) Execute(enclaveCtx *enclaves.EnclaveContext, serializedParams string) (serializedResult string, resultError error) {
 	logrus.Infof("Received serialized execute params '%v'", serializedParams)
 	serializedParamsBytes := []byte(serializedParams)
 	var params ExecuteParams
