@@ -6,8 +6,8 @@
         "build"
     ],
     "dependencies": {
-        "grpc": "^1.24.11",
-        "kurtosis-module-api-lib": "0.10.0",
+        "@grpc/grpc-js": "^1.4.4",
+        "kurtosis-module-api-lib": "0.12.2",
         "loglevel": "^1.7.1"
     },
     "devDependencies": {

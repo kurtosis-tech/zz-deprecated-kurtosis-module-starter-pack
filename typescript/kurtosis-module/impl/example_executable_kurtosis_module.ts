@@ -1,4 +1,4 @@
-import { NetworkContext } from "kurtosis-core-api-lib";
+import { EnclaveContext } from "kurtosis-core-api-lib";
 import { Result, ok, err } from "neverthrow";
 import * as log from "loglevel";
 import { ExecutableKurtosisModule } from "kurtosis-module-api-lib";
@@ -31,7 +31,7 @@ class ExecuteResult {
 export class ExampleExecutableKurtosisModule implements ExecutableKurtosisModule {
     constructor() {}
 
-    async execute(networkCtx: NetworkContext, serializedParams: string): Promise<Result<string, Error>> {
+    async execute(networkCtx: EnclaveContext, serializedParams: string): Promise<Result<string, Error>> {
         log.info("Received serialized execute params  '" + serializedParams + "'");
         let params: ExecuteParams;
         try {
