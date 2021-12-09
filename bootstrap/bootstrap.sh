@@ -166,7 +166,7 @@ output_readme_filepath="${output_dirpath}/${OUTPUT_README_FILENAME}"
 cat <<EOF >"${output_readme_filepath}"
 My Kurtosis Module
 =====================
-Welcome to your new Kurtosis module! You can use the ExampleExecutableKurtosisModule implementation as a pattern to create your own Kurtosis module.
+Welcome to your new [Kurtosis module](https://docs.kurtosistech.com/modules.html)! You can use the ExampleExecutableKurtosisModule implementation as a pattern to create your own Kurtosis module.
 
 Quickstart steps:
 1. Customize your own Kurtosis module by editing the generated files inside the \`/path/to/your/code/repos/kurtosis-module/impl\` folder
