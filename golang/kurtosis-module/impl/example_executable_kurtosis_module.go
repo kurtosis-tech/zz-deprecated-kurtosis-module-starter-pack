@@ -40,7 +40,7 @@ func NewExampleExecutableKurtosisModule() *ExampleExecutableKurtosisModule {
 }
 
 func (e ExampleExecutableKurtosisModule) Execute(enclaveCtx *enclaves.EnclaveContext, serializedParams string) (serializedResult string, resultError error) {
-	logrus.Infof("Received serialized execute params '%v'", serializedParams)
+	logrus.Infof("Received serialized execute params:\n%v", serializedParams)
 	serializedParamsBytes := []byte(serializedParams)
 	var params ExecuteParams
 	if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
