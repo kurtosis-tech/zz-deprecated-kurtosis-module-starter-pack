@@ -32,7 +32,7 @@ export class ExampleExecutableKurtosisModule implements ExecutableKurtosisModule
     constructor() {}
 
     async execute(networkCtx: EnclaveContext, serializedParams: string): Promise<Result<string, Error>> {
-        log.info("Received serialized execute params  '" + serializedParams + "'");
+        log.info(`Received serialized execute params:\n${serializedParams}`);
         let params: ExecuteParams;
         try {
             params = JSON.parse(serializedParams)
