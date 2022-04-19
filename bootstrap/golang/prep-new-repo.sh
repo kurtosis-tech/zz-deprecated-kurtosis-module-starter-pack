@@ -49,13 +49,18 @@ cp -r "${input_dirpath}/${SCRIPTS_DIRNAME}" "${output_dirpath}/"
 # =============================================================================
 # Allow setting the module name programmatically, for testing in CI
 new_module_name="${GO_NEW_MODULE_NAME:-}"
-echo "Go uses Github as a its dependency management store. You'll now need to:"
-echo "  1) Create a new Github repo to contain your Kurtosis module, if you don't have one already"
-echo "  2) Enter the URL of the repo on Github WITHOUT the leading 'https://' below (e.g. 'github.com/my-org/my-repo')"
-echo "NOTE: This value is technically the Go module name. If you're unfamiliar with what this is, you can read more here: https://golang.org/ref/mod"
+echo "ACTION: Go uses Github as its dependency management store. To finish bootstrapping your module, you'll need to do the following now:"
+echo ""
+echo "  1) Create a new repo on Github (https://github.com) to store your Kurtosis module, if you don't have one already"
+echo ""
+echo "  2) Copy the URL of the Github repo as it shows up in your browser bar (e.g. 'https://github.com/kurtosis-tech/kurtosis-module-starter-pack')"
+echo ""
+echo "  3) Enter the URL that you copied WITHOUT the leading 'https://' into the prompt below (e.g. 'github.com/kurtosis-tech/kurtosis-module-starter-pack')"
+echo ""
+echo "NOTE: This value (URL without 'https://' prefix) is technically the Go module name. If you're unfamiliar with what a Go module is, you can read more here: https://golang.org/ref/mod"
 echo ""
 while [ -z "${new_module_name}" ]; do
-  read -p "Module name: " new_module_name
+    read -p "Module name (repo URL without 'https://' prefix): " new_module_name
 done
 
 # Validation, to save us in case someone changes stuff in the future
