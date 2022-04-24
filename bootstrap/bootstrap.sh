@@ -63,9 +63,11 @@ show_help_and_exit() {
   echo ""
   # NOTE: We *could* extract the arg names to variables since they're repeated, but then we wouldn't be able to visually align the indentation here
   echo "  lang                        Language that you want to write your Kurtosis module in (choices: $(paste -sd '|' "${supported_langs_filepath}"))."
-  echo "  new_repo_dirpath            Your new Kurtosis module will be a repo of its own that you'll commit to your version control. This path is  where the bootstrap script"
+  echo ""
+  echo "  new_repo_dirpath            Your new Kurtosis module will live in its own repo that you'll commit to your version control. This arg is where the bootstrap script"
   echo "                              will create the directory to contain the new Kurtosis module's repo, and you should put it wherever you keep your code repos (e.g. "
   echo "                              /path/to/your/code/repos/my-new-kurtosis-module). This path shouldn't exist yet, as the bootstrap will fill it."
+  echo ""
   echo "  kurtosis_module_image_name  Every Kurtosis module runs inside a Docker image, so building your Kurtosis module means producing a Docker image containing"
   echo "                              your module code. This is the name of the Docker image that building your Kurtosis module repo will produce."
   echo "                              This image should not exist yet, as building the Kurtosis module will create it. "

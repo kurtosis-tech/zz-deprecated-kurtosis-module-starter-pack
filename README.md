@@ -17,7 +17,7 @@ Quickstart steps:
     ```
     git clone --single-branch --branch master git@github.com:kurtosis-tech/kurtosis-module-starter-pack.git
     ```
-1. Run the bootstrap script and follow the helptext instructions:
+1. Run the bootstrap script with no arguments, which will output helptext that you can fill in to get your module bootstrapped:
     ```
     bootstrap/bootstrap.sh
     ```
