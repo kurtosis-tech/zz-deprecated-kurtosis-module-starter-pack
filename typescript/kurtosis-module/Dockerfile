@@ -40,5 +40,8 @@ COPY --from=build /build/prod_node_modules ./node_modules
 # copy app sources
 COPY --from=build /build/build ./build
 
+# Copy local static files inside the Kurtosis module image
+COPY kurtosis-module/static_files /static-files
+
 CMD node build/main.js
 
