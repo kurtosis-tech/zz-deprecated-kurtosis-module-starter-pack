@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/kurtosis-tech/kurtosis-lambda-api-lib/golang/lib/execution"
-	"github.com/kurtosis-tech/kurtosis-lambda-starter-pack/golang/kurtosis-lambda/impl"
+	"github.com/kurtosis-tech/kurtosis-module-api-lib/golang/lib/execution"
+	"github.com/kurtosis-tech/kurtosis-module-starter-pack/golang/kurtosis-module/impl"
 	"github.com/sirupsen/logrus"
 	"os"
 )
@@ -16,13 +16,13 @@ const (
 func main() {
 
 	// >>>>>>>>>>>>>>>>>>> REPLACE WITH YOUR OWN CONFIGURATOR <<<<<<<<<<<<<<<<<<<<<<<<
-	configurator := impl.NewExampleKurtosisLambdaConfigurator()
+	configurator := impl.NewExampleExecutableKurtosisModuleConfigurator()
 	// >>>>>>>>>>>>>>>>>>> REPLACE WITH YOUR OWN CONFIGURATOR <<<<<<<<<<<<<<<<<<<<<<<<
 
 
-	lambdaExecutor := execution.NewKurtosisLambdaExecutor(configurator)
-	if err := lambdaExecutor.Run(); err != nil {
-		logrus.Errorf("An error occurred running the Kurtosis Lambda executor:")
+	executor := execution.NewKurtosisModuleExecutor(configurator)
+	if err := executor.Run(); err != nil {
+		logrus.Errorf("An error occurred running the Kurtosis module executor:")
 		fmt.Fprintln(logrus.StandardLogger().Out, err)
 		os.Exit(failureExitCode)
 	}

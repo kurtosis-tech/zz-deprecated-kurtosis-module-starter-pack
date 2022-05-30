@@ -18,12 +18,12 @@ SUPPORTED_LANGS_FILENAME="supported-languages.txt"
 BUILD_SCRIPT_FILENAME="build.sh"
 BUILD_SCRIPT_IMAGE_NAME_VAR_NAME="IMAGE_NAME"
 
-# Script for prepping a new Kurtosis Lambda repo
+# Script for prepping a new Kurtosis module repo
 PREP_NEW_REPO_FILENAME="prep-new-repo.sh"
 
 # Output repo constants
 OUTPUT_README_FILENAME="README.md"
-KURTOSIS_LAMBDA_FOLDER="kurtosis-lambda"
+KURTOSIS_MODULE_FOLDER="kurtosis-module"
 
 SCRIPTS_DIRNAME="scripts"
 
@@ -59,17 +59,19 @@ done <"${supported_langs_filepath}"
 
 show_help_and_exit() {
   echo ""
-  echo "Usage: $(basename "${0}") lang new_repo_dirpath kurtosis_lambda_image_name"
+  echo "Usage: $(basename "${0}") lang new_repo_dirpath kurtosis_module_image_name"
   echo ""
   # NOTE: We *could* extract the arg names to variables since they're repeated, but then we wouldn't be able to visually align the indentation here
-  echo "  lang                        Language that you want to write your Kurtosis Lambda in (choices: $(paste -sd '|' "${supported_langs_filepath}"))."
-  echo "  new_repo_dirpath            Your new Kurtosis Lambda will be a repo of its own that you'll commit to your version control. This path is  where the bootstrap script"
-  echo "                              will create the directory to contain the new Kurtosis Lambda's repo, and you should put it wherever you keep your code repos (e.g. "
-  echo "                              /path/to/your/code/repos/my-new-kurtosis-lambda). This path shouldn't exist yet, as the bootstrap will fill it."
-  echo "  kurtosis_lambda_image_name  Every Kurtosis Lambda runs inside a Docker image, so building your Kurtosis Lambda means producing a Docker image containing"
-  echo "                              your Kurtosis Lambda code. This is the name of the Docker image that building your Kurtosis Lambda repo will produce."
-  echo "                              This image should not exist yet, as building the Kurtosis Lambda will create it. "
-  echo "                              The image name must match the regex [${ALLOWED_IMAGE_NAME_CHARS}]+ (e.g. 'my-kurtosis-lambda-image')."
+  echo "  lang                        Language that you want to write your Kurtosis module in (choices: $(paste -sd '|' "${supported_langs_filepath}"))."
+  echo ""
+  echo "  new_repo_dirpath            Your new Kurtosis module will live in its own repo that you'll commit to your version control. This arg is where the bootstrap script"
+  echo "                              will create the directory to contain the new Kurtosis module's repo, and you should put it wherever you keep your code repos (e.g. "
+  echo "                              /path/to/your/code/repos/my-new-kurtosis-module). This path shouldn't exist yet, as the bootstrap will fill it."
+  echo ""
+  echo "  kurtosis_module_image_name  Every Kurtosis module runs inside a Docker image, so building your Kurtosis module means producing a Docker image containing"
+  echo "                              your module code. This is the name of the Docker image that building your Kurtosis module repo will produce."
+  echo "                              This image should not exist yet, as building the Kurtosis module will create it. "
+  echo "                              The image name must match the regex [${ALLOWED_IMAGE_NAME_CHARS}]+ (e.g. 'my-kurtosis-module-image')."
   echo ""
   exit 1 # Exit with an error so CI fails if this was accidentally called
 }
@@ -79,7 +81,7 @@ show_help_and_exit() {
 # =============================================================================
 lang="${1:-}"
 output_dirpath="${2:-}"
-lambda_image="${3:-}"
+module_image="${3:-}"
 
 if [ -z "${lang}" ]; then
   echo "Error: Lang cannot be empty" >&2
@@ -97,13 +99,13 @@ if [ -d "${output_dirpath}" ] && [ "$(ls -A "${output_dirpath}")" ]; then
   echo "Error: Output directory '${output_dirpath}' exists, but is not empty"
   show_help_and_exit
 fi
-if [ -z "${lambda_image}" ]; then
-  echo "Error: Kurtosis Lambda image cannot be empty" >&2
+if [ -z "${module_image}" ]; then
+  echo "Error: Kurtosis module image cannot be empty" >&2
   show_help_and_exit
 fi
-sanitized_image="$(echo "${lambda_image}" | sed "s|[^${ALLOWED_IMAGE_NAME_CHARS}]||g")"
-if [ "${sanitized_image}" != "${lambda_image}" ]; then
-  echo "Error: Kurtosis Lambda image name '${lambda_image}' doesn't match regex [${ALLOWED_IMAGE_NAME_CHARS}]+" >&2
+sanitized_image="$(echo "${module_image}" | sed "s|[^${ALLOWED_IMAGE_NAME_CHARS}]||g")"
+if [ "${sanitized_image}" != "${module_image}" ]; then
+  echo "Error: Kurtosis module image name '${module_image}' doesn't match regex [${ALLOWED_IMAGE_NAME_CHARS}]+" >&2
   show_help_and_exit
 fi
 
@@ -141,7 +143,7 @@ fi
 # Use language-specific prep script to populate contents of output directory
 lang_bootstrap_dirpath="${script_dirpath}/${lang}"
 prep_new_repo_script_filepath="${lang_bootstrap_dirpath}/${PREP_NEW_REPO_FILENAME}"
-if ! bash "${prep_new_repo_script_filepath}" "${lang_dirpath}" "${output_dirpath}" "${lambda_image}"; then
+if ! bash "${prep_new_repo_script_filepath}" "${lang_dirpath}" "${output_dirpath}" "${module_image}"; then
   echo "Error: Failed to prep new repo using script '${prep_new_repo_script_filepath}'" >&2
   exit 1
 fi
@@ -156,7 +158,7 @@ if [ "$(grep -c "${image_name_replacement_pattern}" "${build_script_filepath}")"
 fi
 
 # Replace Docker image names in code (we need the "-i '' " argument because Mac sed requires it)
-if ! sed -i"${SED_INPLACE_FILE_SUFFIX}" "s,${image_name_replacement_pattern},${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\"${lambda_image}\",g" "${build_script_filepath}"; then
+if ! sed -i"${SED_INPLACE_FILE_SUFFIX}" "s,${image_name_replacement_pattern},${BUILD_SCRIPT_IMAGE_NAME_VAR_NAME}=\"${module_image}\",g" "${build_script_filepath}"; then
   echo "Error: Could not replace Docker image name in build file '${build_script_filepath}'" >&2
   exit 1
 fi
@@ -164,16 +166,17 @@ fi
 # README file
 output_readme_filepath="${output_dirpath}/${OUTPUT_README_FILENAME}"
 cat <<EOF >"${output_readme_filepath}"
-My Kurtosis Lambda
+My Kurtosis Module
 =====================
-Welcome to your new Kurtosis Lambda! You can use Example Kurtosis Lambda implementation as a pattern to create your own Kurtosis Lambda.
+Welcome to your new [Kurtosis module](https://docs.kurtosistech.com/modules.html)! You can use the ExampleExecutableKurtosisModule implementation as a pattern to create your own Kurtosis module.
+
 Quickstart steps:
-1. Customize your own Kurtosis Lambda by editing the generated files inside the \`/path/to/your/code/repos/kurtosis-lambda/impl\` folder
-    1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis Lambda
-    1. Write the functionality of your Kurtosis Lambda inside your implementation of the \`KurtosisLambda.execute\` method by using the serialized parameters (validating & sanitizing the parameters as necessary)
-    1. Write an implementation of \`KurtosisLambdaConfigurator\` that accepts configuration parameters and produces an instance of your custom Kurtosis Lambda
-    1. Edit the main file and replace the example \`KurtosisLambdaConfigurator\` with your own implementation that produces your custom Lambda
-    1. Run \`scripts/build.sh\` to package your Kurtosis Lambda into a Docker image that can be used inside Kurtosis
+1. Customize your own Kurtosis module by editing the generated files inside the \`/path/to/your/code/repos/kurtosis-module/impl\` folder
+    1. Rename files and objects, if you want, using a name that describes the functionality of your Kurtosis module
+    1. Write the functionality of your Kurtosis module inside your implementation of the \`ExecutableKurtosisModule.execute\` method by using the serialized parameters (validating & sanitizing the parameters as necessary)
+    1. Write an implementation of \`KurtosisModuleConfigurator\` that accepts configuration parameters and produces an instance of your custom Kurtosis module
+    1. Edit the main file and replace the example \`KurtosisModuleConfigurator\` with your own implementation that produces your custom \`ExecutableKurtosisModule\`
+    1. Run \`scripts/build.sh\` to package your Kurtosis module into a Docker image that can be used inside Kurtosis
 EOF
 if [ "${?}" -ne 0 ]; then
   echo "Error: Could not write README file to '${output_readme_filepath}'" >&2
@@ -187,13 +190,13 @@ if ! find "${output_dirpath}" -name "*${SED_INPLACE_FILE_SUFFIX}" -delete; then
   exit 1
 fi
 
-#Initialize the new repo as a Git directory, because running the Kurtosis Lambda depends on it
+# Initialize the new repo as a Git directory, because running the Kurtosis module depends on it
 if ! command -v git &> /dev/null; then
-    echo "Error: Git is required to create a new Kurtosis Lambda repo, but it is not installed" >&2
+    echo "Error: Git is required to create a new Kurtosis module repo, but it is not installed" >&2
     exit 1
 fi
 if ! cd "${output_dirpath}"; then
-    echo "Error: Could not cd to new Kurtosis Lambda repo '${output_dirpath}', which is necessary for initializing it as a Git repo" >&2
+    echo "Error: Could not cd to new Kurtosis module repo '${output_dirpath}', which is necessary for initializing it as a Git repo" >&2
     exit 1
 fi
 if ! git init; then
@@ -211,5 +214,5 @@ fi
 
 #Runs build script
 echo "Bootstrap successful!"
-echo "To build the Lambda, run: ${output_dirpath}/${SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
-echo "To customize your Lambda, follow the steps in '${output_readme_filepath}'"
+echo "To build the module, run: ${output_dirpath}/${SCRIPTS_DIRNAME}/${BUILD_SCRIPT_FILENAME}"
+echo "To customize your module, follow the steps in '${output_readme_filepath}'"

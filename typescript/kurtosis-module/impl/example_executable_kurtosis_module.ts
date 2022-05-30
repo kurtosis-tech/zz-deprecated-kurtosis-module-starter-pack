@@ -1,7 +1,7 @@
-import { NetworkContext } from "kurtosis-core-api-lib";
-import { KurtosisLambda } from "kurtosis-lambda-api-lib";
+import { EnclaveContext } from "kurtosis-core-api-lib";
 import { Result, ok, err } from "neverthrow";
 import * as log from "loglevel";
+import { ExecutableKurtosisModule } from "kurtosis-module-api-lib";
 
 const TIPS_REPOSITORY: string[] = [
     "Everything not saved will be lost.",
@@ -14,11 +14,13 @@ const TIPS_REPOSITORY: string[] = [
     "If you sleep until lunch time, you can save the breakfast money.",
 ];
 
-interface ExampleKurtosisLambdaParams {
+// Parameters that the execute command accepts, serialized as JSON
+interface ExecuteParams {
     iWantATip: boolean;
 }
 
-class ExampleKurtosisLambdaResult {
+// Result that the execute command returns, serialized as JSON
+class ExecuteResult {
     readonly tip: string
 
     constructor(tip: string) {
@@ -26,12 +28,12 @@ class ExampleKurtosisLambdaResult {
     }
 }
 
-export class ExampleKurtosisLambda implements KurtosisLambda {
+export class ExampleExecutableKurtosisModule implements ExecutableKurtosisModule {
     constructor() {}
 
-    async execute(networkCtx: NetworkContext, serializedParams: string): Promise<Result<string, Error>> {
-        log.info("Example Kurtosis Lambda receives serializedParams '" + serializedParams + "'");
-        let params: ExampleKurtosisLambdaParams;
+    async execute(networkCtx: EnclaveContext, serializedParams: string): Promise<Result<string, Error>> {
+        log.info(`Received serialized execute params:\n${serializedParams}`);
+        let params: ExecuteParams;
         try {
             params = JSON.parse(serializedParams)
         } catch (e: any) {
@@ -44,24 +46,24 @@ export class ExampleKurtosisLambda implements KurtosisLambda {
                 "it's not an Error so we can't report any more information than this"));
         }
 
-        const exampleKurtosisLambdaResult: ExampleKurtosisLambdaResult = new ExampleKurtosisLambdaResult(
-            ExampleKurtosisLambda.getRandomTip(params.iWantATip)
+        const resultObj: ExecuteResult = new ExecuteResult(
+            ExampleExecutableKurtosisModule.getRandomTip(params.iWantATip)
         );
 
         let stringResult;
         try {
-            stringResult = JSON.stringify(exampleKurtosisLambdaResult);
+            stringResult = JSON.stringify(resultObj);
         } catch (e: any) {
             // Sadly, we have to do this because there's no great way to enforce the caught thing being an error
             // See: https://stackoverflow.com/questions/30469261/checking-for-typeof-error-in-js
             if (e && e.stack && e.message) {
                 return err(e as Error);
             }
-            return err(new Error("An error occurred serializing the Kurtosis Lambda result threw an exception, but " +
+            return err(new Error("Serializing the Kurtosis module result threw an exception, but " +
                 "it's not an Error so we can't report any more information than this"));
         }
 
-        log.info("Example Kurtosis Lambda executed successfully")
+        log.info("Execution successful")
         return ok(stringResult);
     }
 
@@ -71,7 +73,7 @@ export class ExampleKurtosisLambda implements KurtosisLambda {
             // This gives a random number between [0, length)
             tip = TIPS_REPOSITORY[Math.floor(Math.random() * TIPS_REPOSITORY.length)];
         } else {
-            tip = "Kurtosis Lambda Example won't enlighten you today."
+            tip = "The module won't enlighten you today."
         }
         return tip
     }

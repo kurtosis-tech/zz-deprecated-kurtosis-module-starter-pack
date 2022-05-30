@@ -2,8 +2,8 @@ package impl
 
 import (
 	"encoding/json"
-	"github.com/kurtosis-tech/kurtosis-client/golang/lib/networks"
-	"github.com/palantir/stacktrace"
+	"github.com/kurtosis-tech/kurtosis-core-api-lib/api/golang/lib/enclaves"
+	"github.com/kurtosis-tech/stacktrace"
 	"github.com/sirupsen/logrus"
 	"math/rand"
 	"time"
@@ -22,40 +22,42 @@ var (
 	}
 )
 
-type ExampleKurtosisLambda struct {
-}
-
-type ExampleKurtosisLambdaParams struct {
+// Parameters that the execute command accepts, serialized as JSON
+type ExecuteParams struct {
 	IWantATip bool `json:"iWantATip"`
 }
 
-type ExampleKurtosisLambdaResult struct {
+// Result that the execute command returns, serialized as JSON
+type ExecuteResult struct {
 	Tip string `json:"tip"`
 }
 
-func NewExampleKurtosisLambda() *ExampleKurtosisLambda {
-	return &ExampleKurtosisLambda{}
+type ExampleExecutableKurtosisModule struct {
 }
 
-func (e ExampleKurtosisLambda) Execute(networkCtx *networks.NetworkContext, serializedParams string) (serializedResult string, resultError error) {
-	logrus.Infof("Example Kurtosis Lambda receives serializedParams '%v'", serializedParams)
+func NewExampleExecutableKurtosisModule() *ExampleExecutableKurtosisModule {
+	return &ExampleExecutableKurtosisModule{}
+}
+
+func (e ExampleExecutableKurtosisModule) Execute(enclaveCtx *enclaves.EnclaveContext, serializedParams string) (serializedResult string, resultError error) {
+	logrus.Infof("Received serialized execute params:\n%v", serializedParams)
 	serializedParamsBytes := []byte(serializedParams)
-	var params ExampleKurtosisLambdaParams
+	var params ExecuteParams
 	if err := json.Unmarshal(serializedParamsBytes, &params); err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred deserializing the Example Kurtosis Lambda serialized params with value '%v'", serializedParams)
+		return "", stacktrace.Propagate(err, "An error occurred deserializing the serialized execute params string '%v'", serializedParams)
 	}
 
-	exampleKurtosisLambdaResult := &ExampleKurtosisLambdaResult{
+	resultObj := &ExecuteResult{
 		Tip: getRandomTip(params.IWantATip),
 	}
 
-	result, err := json.Marshal(exampleKurtosisLambdaResult)
+	result, err := json.Marshal(resultObj)
 	if err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred serializing the Example Kurtosis Lambda Result with value '%+v'", exampleKurtosisLambdaResult)
+		return "", stacktrace.Propagate(err, "An error occurred serializing the result object '%+v'", resultObj)
 	}
 	stringResult := string(result)
 
-	logrus.Info("Example Kurtosis Lambda executed successfully")
+	logrus.Info("Execution successful")
 	return stringResult, nil
 }
 
@@ -65,7 +67,7 @@ func getRandomTip(shouldGiveAdvice bool) string {
 		rand.Seed(time.Now().Unix())
 		tip = tipsRepository[rand.Intn(len(tipsRepository))]
 	} else {
-		tip = "Kurtosis Lambda Example won't enlighten you today."
+		tip = "The module won't enlighten you today."
 	}
 	return tip
 }

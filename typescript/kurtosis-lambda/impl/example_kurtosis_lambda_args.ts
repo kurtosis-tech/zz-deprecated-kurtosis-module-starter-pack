@@ -1,3 +1,0 @@
-interface ExampleKurtosisLambdaArgs {
-    logLevel: string;
-}
