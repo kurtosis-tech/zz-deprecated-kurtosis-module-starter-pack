@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  kurtosis-docs-checker: kurtosis-tech/docs-checker@0.2.0
+  kurtosis-docs-checker: kurtosis-tech/docs-checker@0.2.1
 
 executors:
   ubuntu_vm:
@@ -41,7 +41,6 @@ workflows:
           filters:
             branches:
               ignore:
-                - develop
                 - master
       - check_code:
           context:
@@ -49,7 +48,6 @@ workflows:
           filters:
             branches:
               ignore:
-                - develop
                 - master
 
       # ============== Jobs that run upon release ==================
