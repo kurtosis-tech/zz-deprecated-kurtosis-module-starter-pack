@@ -1,14 +1,10 @@
 Kurtosis Module Starter Pack
 ============================
-This repo contains:
-
-1. Example implementations of an executable Kurtosis module in each language
-1. Infrastructure for bootstrapping a new executable Kurtosis module that you can use to create your own customized Kurtosis module
+This repo will bootstrap a new Kurtosis module repository for you, so you can create your own customized module.
 
 Kurtosis Module Quickstart
 --------------------------
 Prerequisites:
-* A [Kurtosis user account](https://www.kurtosistech.com/sign-up)
 * `git` installed on your machine
 * `docker` installed on your machine
 
