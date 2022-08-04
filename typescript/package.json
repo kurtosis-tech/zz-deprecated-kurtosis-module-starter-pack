@@ -6,8 +6,8 @@
         "build"
     ],
     "dependencies": {
-        "kurtosis-core-api-lib": "1.55.2",
-        "kurtosis-module-api-lib": "0.17.0",
+        "kurtosis-core-api-lib": "1.57.0",
+        "kurtosis-module-api-lib": "0.18.0",
         "loglevel": "^1.7.1"
     },
     "devDependencies": {
