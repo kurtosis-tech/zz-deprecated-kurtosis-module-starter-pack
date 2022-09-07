@@ -7,7 +7,7 @@
     ],
     "dependencies": {
         "kurtosis-core-api-lib": "1.58.3",
-        "kurtosis-module-api-lib": "0.21.0",
+        "kurtosis-module-api-lib": "0.21.2",
         "loglevel": "^1.7.1"
     },
     "devDependencies": {
