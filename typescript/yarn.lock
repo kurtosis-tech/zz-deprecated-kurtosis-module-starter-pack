@@ -486,10 +486,10 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-kurtosis-core-api-lib@1.58.3:
-  version "1.58.3"
-  resolved "https://registry.yarnpkg.com/kurtosis-core-api-lib/-/kurtosis-core-api-lib-1.58.3.tgz#1b6dfd4630d65be36cd11d430124a1f5d881d595"
-  integrity sha512-OSNZMwMbKkYcwkJjUx+pXxsQjC0bqgj86Tt1HzBtiXnjv0WIJfSpa7FQmk9SU6OITcsXKi7rq13ZXdObVYK3rA==
+kurtosis-core-api-lib@1.59.0:
+  version "1.59.0"
+  resolved "https://registry.yarnpkg.com/kurtosis-core-api-lib/-/kurtosis-core-api-lib-1.59.0.tgz#c6f1fdf352f6e9fae1b6177be99a85ded3e2682f"
+  integrity sha512-TKH22cCNw5NlrApIvWOGWVVjrRUWy2YCGSPMJyo6SJPT9l6kiYJaoT5HaZ2vqA76hZbzutMk4YMQAiTfiFda8w==
   dependencies:
     "@grpc/grpc-js" "^1.4.4"
     "@types/google-protobuf" "^3.15.5"
@@ -502,12 +502,12 @@ kurtosis-core-api-lib@1.58.3:
     path-browserify "^1.0.1"
     tar "^6.1.11"
 
-kurtosis-module-api-lib@0.21.2:
-  version "0.21.2"
-  resolved "https://registry.yarnpkg.com/kurtosis-module-api-lib/-/kurtosis-module-api-lib-0.21.2.tgz#3dfba651ae324ebab61603418315250688fe34fd"
-  integrity sha512-LG45yC+yqCOdv+Mb1szieRZK9A+BgO5mT4qkiEjLTgifLA9lqQU2H9G3ANXwOs2Mjg1o3rHRT0vSJJYSryfEYw==
+kurtosis-module-api-lib@0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/kurtosis-module-api-lib/-/kurtosis-module-api-lib-0.22.0.tgz#b4895a783baeda8658e90d887cc104c94799f405"
+  integrity sha512-8sB1iD5ySVRXEPEtPxmzz+6R7XtszRzoHC+d4DL4oDRG5TWtojvWkbNBdSbzptb6+JK2/EkSjWK/vLaeM/Tl0A==
   dependencies:
-    kurtosis-core-api-lib "1.58.3"
+    kurtosis-core-api-lib "1.59.0"
     loglevel "^1.7.1"
     minimal-grpc-server "0.6.0"
     neverthrow "^4.2.2"
