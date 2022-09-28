@@ -1,4 +1,4 @@
-import { EnclaveContext } from "kurtosis-core-api-lib";
+import { EnclaveContext } from "kurtosis-sdk";
 import { Result, ok, err } from "neverthrow";
 import * as log from "loglevel";
 import { ExecutableKurtosisModule } from "kurtosis-module-api-lib";
