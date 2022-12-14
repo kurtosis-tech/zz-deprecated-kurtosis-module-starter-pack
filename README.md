@@ -1,3 +1,6 @@
+# DEPRECATION NOTICE
+This has been replaced in favor of [Starlark Packages](https://docs.kurtosis.com/reference/packages/)
+
 Kurtosis Module Starter Pack
 ============================
 This repo will bootstrap a new Kurtosis module repository for you, so you can create your own customized module.
